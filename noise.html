@@ -239,7 +239,7 @@ function pixelAAA()
 						r += 52;
 					}
 					g = 252;
-					b = 16; //up to here
+					b = 16;
 				}
 				if (chance_1 > 50 && r > 160){  //rgba(156,224,255,1)
 					r += 48;
@@ -275,7 +275,7 @@ function pixelAAA()
 				else if (chance_4 > 70)
 				{
 					r = 255;
-					g += 55;
+					g += 25;
 					if (g < 230){
 						g = 250;
 					}
@@ -294,7 +294,7 @@ function pixelAAA()
 				}
 				b = 222;
 			}
-			if (colorForce_chance < 6){
+			if (colorForce_chance < 5){
 				if (g > 132){  //rgba(198,252,97,1)
 					r = 198;
 					g = 252;
@@ -306,7 +306,7 @@ function pixelAAA()
 					b = 196;
 				}
 			}
-			if(colorForce_chance > 10 && colorForce_chance < 16){
+			if(colorForce_chance > 10 && colorForce_chance < 15){
 				if (r > 120){  //rgba(227,16,88,1)
 					r = 227;
 					g = 16;
@@ -407,7 +407,7 @@ function pixelAAA()
 				ctx.fillRect(px_x[x_index]-gutter, px_y[y_index]+yDrop, 3, 3);
 				var j_ch = Math.floor(Math.floor(Math.random() * 100) + 0);
 				var linePos_x = px_x[x_index]-60;
-				if (j_ch > 55){
+				if (j_ch > 60){
 					var sppHead = '-                                ';
 					if (j_ch > 70){
 						sppHead += '                   ';
@@ -421,6 +421,10 @@ function pixelAAA()
 					}
 					sppHead += '                        _';
 					ctx.fillText(sppHead, linePos_x, px_y[y_index]+2);  //dashes
+					for (var bum = 0; bum < setLength; bum++){
+						ctx.fillRect(px_x[x_index]+gutter, px_y[y_index]+yDrop+boxPos+1, px_w, px_h);
+						gutter += gutterSpace;
+					}
 				}
 				if (j_ch < 6){
 					var Ln_w = Math.floor(Math.floor(Math.random() * 64) + 18);
