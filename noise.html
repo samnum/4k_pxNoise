@@ -2,14 +2,19 @@
 <head>
 	<title>Pixel GL </title>
 </head>
-<body><canvas id="CANVAS" width="3840" height="420" style="border:2px solid #03107b"></canvas>
+<body><canvas id="CANVAS" width="3840" height="420" style="border:1px solid #03107b"></canvas>
 <div class = "buttons">
-<input type="submit" value="Run Pixels [1]" onclick="pixelz()" />
+<input type="submit" value="Run px Scatter [1]" onclick="pixelz()" />
 <input type="submit" value="[3]" onclick="pixelz3()" />
-<br><input type="submit" value="Run px sets [1]" onclick="pxSETS()" />
-<input type="submit" value="[4]" onclick="pxSETS4()" />
+|| <input type="submit" value="Wave ON/OFF" onclick="wvToggle()" />
+<input type="submit" value="Grad ON/OFF" onclick="grdToggle()" />
+|| <input type="submit" value="Run px Clear" onclick="clear()" />
+<br><input type="submit" value="Run px Sets [1]" onclick="pxSETS()" />
+<input type="submit" value="[3]" onclick="pxSETS3()" />
+# <input type="submit" value="Fill" onclick="bunch()" />
+
 </div>
-<br> <canvas id="COLORDISPLAY" width="3840" height="440" style="border:2px solid #ff0ffe"></canvas>
+<br> <canvas id="COLORDISPLAY" width="3840" height="440" style="border:1px solid #ff0ffe"></canvas>
 <script language="Javascript">
 var c = document.getElementById ("CANVAS");
 var cola = document.getElementById ("COLORDISPLAY");
@@ -18,30 +23,35 @@ var showColor = cola.getContext("2d");
 
 // PIXELS ----------------------------------------------------------------------------------
 var timesRun = 1;
-var pxSets = 1;
+var pxSets = true;  //1
 var amt = 96;
+var count = 0;
+var globalCount = 0;
+var wvSwitch = true;
+var top_grad = true;
 
-function pixelAAA()
-{
+function pixelAAA(){
+	count++;	    globalCount++;
 	showColor.fillStyle = "rgba(0,0,0,1)";
 	showColor.fillRect(0,0,3840,2160);
-	var textPosY = 35;
+	var textPosY = 38;
 	var textPosX = 15;
-	for (var t = 0; t < timesRun; m = t++)
-	{ 
+	for (var t = 0; t < timesRun; m = t++){ 
 		var px_x = [];
 		var px_y = [];
 		var rgb_value = [];
+		var px_xBottom = [];  //extra pool for block on bottom
+		var globalChance = [];
 
-		for (var i = 0; i < 2000; i++)
-		{
-			px_x[i] = Math.floor(Math.floor(Math.random() * 3840) + 1);
-			px_y[i] = Math.floor(Math.floor(Math.random() * 420) + 1);
+		for (var i = 0; i < 2500; i++){
+			px_x[i] = Math.floor(Math.floor(Math.random() * c.width) + 1);
+			px_y[i] = Math.floor(Math.floor(Math.random() * c.height) + 1);
 			rgb_value[i] = Math.floor(Math.floor(Math.random() * 255) + 0);
+			px_xBottom[i] = Math.floor(Math.floor(Math.random() * c.width) + 1);
+			globalChance[i] = Math.floor(Math.floor(Math.random() * 100) + 0);
 		}
 		
-		for (var nyc = 0; nyc < amt; nyc++)
-		{
+		for (var nyc = 0; nyc < amt; nyc++){
 			var px_w = 1;
 			var px_h = 1;
 			var colorForce_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
@@ -61,20 +71,17 @@ function pixelAAA()
 			var saturate_g = Math.floor(Math.floor(Math.random() * 100) + 0);
 			var saturate_b = Math.floor(Math.floor(Math.random() * 100) + 0);
 			
-			if (r < 130 && saturate_r > 50)  //color saturation bias
-			{
+			if (r < 130 && saturate_r > 50){  //color saturation bias
 				r += 90;
 			}
-			if (g < 130 && saturate_g > 50)
-			{
+			if (g < 130 && saturate_g > 50){
 				g += 90;
 			}
 			if (b < 130 && saturate_b > 50){
 				b += 90;
 			}
-			if (r > 190)  {
-				if (g > 160)
-				{
+			if (r > 190){
+				if (g > 160){
 					g -= 154;
 				}
 				if (b > 170){
@@ -93,8 +100,7 @@ function pixelAAA()
 				if (b > 160){
 					b -= 130;
 				}
-				if (g > 220 && r < 40)  //for bright green bias
-				{
+				if (g > 220 && r < 40){  //for bright green bias
 					r = 8;
 					b = 52;
 				}
@@ -124,7 +130,6 @@ function pixelAAA()
 				}
 			}
 			if (r < 178 && r > 10 && g < 138 && g > 60 && b < 134 && b > 70){  //filter brown shit bias
-
 				if (r > 50 && g < 128){  //for neon blue ish bias 
 					r = 20;
 					g = 230;
@@ -177,7 +182,7 @@ function pixelAAA()
 					g += 108;
 					b = 255;
 				}
-				else{
+				else {
 					r = 255;
 					b += 106;
 				}
@@ -321,11 +326,13 @@ function pixelAAA()
 			if (r > 255){
 				r = 250;
 			}
+			var alpha = 1;
 			fill += r; fill += ",";
 			fill += g; fill += ",";
-			fill += b; fill += ",1)";
+			fill += b; fill += ",";
+			fill += alpha; fill += ")";
 			var yDrop = 0;
-			if (y_chance > 20){
+			if (y_chance > 20 && top_grad == true){
 				yDrop += 40;
 				if (y_chance > 32){
 					yDrop += 36;
@@ -348,12 +355,15 @@ function pixelAAA()
 						}
 					}
 				}
-			}			
+			}
+			//show color inof
 			ctx.fillStyle = fill;  showColor.fillStyle = fill;
 			showColor.font = "12px Courier New";
 			showColor.fillText("▅ " + fill, textPosX, textPosY);
+			showColor.fillText("count: " + count, 182, 10); 
+			showColor.fillText("globalCount: " + globalCount, 180, 22); 
 			textPosY += 17;
-			if (pxSets == 1){  //px scatter
+			if (pxSets == false){  //px scatter
 				showColor.fillText("px scatter", 10, 10);
 				var ww_Variance = Math.floor(Math.floor(Math.random() * 3) + 0);	
 				ctx.fillRect(px_x[x_index], px_y[y_index]+yDrop, px_w+ww_Variance, px_h);
@@ -365,7 +375,7 @@ function pixelAAA()
 				ctx.fillRect(px_x[x_index]-(172+xVariance), px_y[y_index]-yVariance+yDrop, px_w, px_h);
 				ctx.fillRect(px_x[x_index]+xVariance, px_y[y_index]+yVariance+yDrop, px_w, px_h);  //x,y,w,h
 			}
-			if (pxSets == 3){  //px set
+			if (pxSets == true){  //px set
 				showColor.fillText("px set", 10, 10);
 				if (colorForce_chance > 90){
 					r = 188;
@@ -373,27 +383,26 @@ function pixelAAA()
 					b = 255;
 					ctx.fillStyle = fill;
 				}
-				var setLength = 3;
+				var setLength = 5;
 				var s_variance = Math.floor(Math.floor(Math.random() * 14) + 0);	
 				var gutter = 2;
 				var gutterSpace = Math.floor(Math.floor(Math.random() * 6) + 1);
 				var long_x = px_x[69];
-				var cluster_amt = Math.floor(Math.floor(Math.random() * 8) + 1);
+				var cluster_amt = Math.floor(Math.floor(Math.random() * 7) + 1);
 				var space_variance = Math.floor(Math.floor(Math.random() * 1640) + 0);  //for px set
-				var cl_x = long_x+space_variance;
-				var cl_y = px_y[y_index]+yDrop;
+
 				var boxPos = Math.floor(Math.floor(Math.random() * 15) + 6);
-				var ww_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
-				if (ww_chance > 95 || ww_chance < 5){
-					cl_x -= (space_variance*2);
-					cl_y += 50;
+				var ww_chance = Math.floor(Math.floor(Math.random() * 100) + 0);  //left bias
+				if (ww_chance > 94 || ww_chance < 6){
+					cl_x -= (s_variance*3);
+					cl_y += 40;
 				}
 				if (ww_chance > 50){
 					boxPos *= -1;
 				}
 				setLength += s_variance;
 				
-				for (var bum = 0; bum < setLength; bum++){  //spaced px
+				for (var nng = 0; nng < setLength; nng++){  //spaced px
 					if (ww_chance >= 75 || ww_chance < 26){
 						ctx.fillRect(px_x[x_index]+gutter, px_y[y_index]+yDrop+boxPos, px_w, px_h);
 						gutter += gutterSpace;
@@ -416,13 +425,14 @@ function pixelAAA()
 							linePos_x -= 210;
 							if (j_ch > 96){
 								linePos_x -= 310;
+								ctx.fillRect(px_xBottom[555], 430, 100, 10);
 							}
 						}
 					}
 					sppHead += '                        _';
 					ctx.fillText(sppHead, linePos_x, px_y[y_index]+2);  //dashes
 					for (var bum = 0; bum < setLength; bum++){
-						ctx.fillRect(px_x[x_index]+gutter, px_y[y_index]+yDrop+boxPos+1, px_w, px_h);
+						ctx.fillRect(px_x[x_index]+gutter+1, px_y[y_index]+yDrop+boxPos+1, px_w, px_h);
 						gutter += gutterSpace;
 					}
 				}
@@ -431,25 +441,50 @@ function pixelAAA()
 					ctx.fillRect(px_x[555], px_y[555]+yDrop, Ln_w, 1);
 					ctx.fillRect(px_x[555]-155, px_y[555]+yDrop+20,Ln_w-17, 1);
 				}
+				if (j_ch > 20 && j_ch < 25){
+					var yDown = 0;
+					var ydLength = Math.floor(Math.floor(Math.random() * 11) + 2);
+					var indexN = Math.floor(Math.floor(Math.random() * 800) + 2);
+					for (var nut = 0; nut < ydLength; nut++){
+						ctx.fillRect(px_x[indexN], px_y[indexN]+yDrop+yDown, 1, 1);
+						ctx.fillRect(px_x[indexN]+3, px_y[indexN]+yDrop+yDown, 1, 1);
+						yDown += 2;
+					}
+					if (j_ch > 23){
+						ctx.fillRect(px_x[150], px_y[indexN]+yDrop, 10, 4);
+						ctx.fillRect(px_xBottom[222], 430, 64, 10);
+					}
+				}
+				if (j_ch == 64){
+					ctx.fillRect(px_xBottom[1090], 428, 46, 12);
+				}
+				if (j_ch == 69){
+					ctx.fillRect(px_xBottom[1240], 428, 20, 10);
+					ctx.fillRect(px_x[575], px_y[575], 6, 1);
+				}
 
-				px_h += s_variance*2;
+				px_h += s_variance*2; 
+				
+				var cl_x = long_x+space_variance;
+				var cl_y = px_y[y_index]+yDrop;
 				for (var aw = 0; aw < cluster_amt; aw++){  //cluster
 					var x_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
 					var reduce_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
 					var cl_distance = Math.floor(Math.floor(Math.random() * 20) + 3);
-					var w_Variance = Math.floor(Math.floor(Math.random() * 2) + 1);
+					var w_Variance = Math.floor(Math.floor(Math.random() * 1) + 0);
 					var h_Variance = Math.floor(Math.floor(Math.random() * 3) + 1);
 					var cl_w = px_w+w_Variance;
 					var cl_h = px_h+h_Variance;
-					//var nFill = "rgba (";
+					var nFill = "rgba (";
 					if (x_chance == 10 && reduce_chance == 10){
 						cl_h = 200;
 					}
+					//ctx.fillStyle = fill;
 					ctx.fillRect(cl_x, cl_y, cl_w, cl_h);
 					px_h -= 1;
 					if (x_chance >= 50){
 						cl_x += cl_distance;
-						if (x_chance >= 75){
+						if (x_chance >= 75 || x_chance <= 24){
 							cl_y += cl_distance;
 						}
 						else{
@@ -458,12 +493,16 @@ function pixelAAA()
 					}
 					else if (x_chance < 50){
 						cl_x -= cl_distance;
-						if (x_chance >= 75){
+						if (x_chance >= 75 || x_chance <= 24){
 							cl_y += cl_distance;
 						}
 						else{
 							cl_y -= cl_distance;
 						}
+					}
+					if (x_chance > 95 || x_chance < 5){  //more left bias because idk why 
+						cl_x -= 35;
+						cl_y -= 20;
 					}
 					//cluster gaps
 					var w_Variance = Math.floor(Math.floor(Math.random() * 3) + 1);
@@ -477,12 +516,13 @@ function pixelAAA()
 						}
 					}
 					ctx.clearRect(cl_x-10, cl_y+6, 2, 1);
+					ctx.clearRect(cl_x+20, cl_y, 1, 5);
 					
-					//color offset that doesn't work
+					//color offset that WORKS NOW
 					x_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
-					var colorOffset1 = Math.floor(Math.floor(Math.random() * 136) + 20);
-					var colorOffset2 = Math.floor(Math.floor(Math.random() * 107) + 20);
-					var colorOffset3 = Math.floor(Math.floor(Math.random() * 70) + 30);
+					var colorOffset1 = Math.floor(Math.floor(Math.random() * 136) + 54);
+					var colorOffset2 = Math.floor(Math.floor(Math.random() * 107) + 54);
+					var colorOffset3 = Math.floor(Math.floor(Math.random() * 90) + 54);
 					if (r < 120 && g < 120){
 						if (x_chance >= 50){
 							r += colorOffset1;
@@ -518,34 +558,114 @@ function pixelAAA()
 							g = 220;
 						}
 					}
-					if (b > 150){
-						b = 220;
+					if (b > 145){
+						b -= colorOffset3;
+						if (b < 100 && r > 200 && g > 200){
+							r -= 88;
+							g -= 92;
+						}
+					}
+					if (g < 70 && b < 80){
+						g += colorOffset3*2;
+						b += colorOffset1;
+					}
+					if (globalChance[25] > 80){
+						if (r < 160){
+							r += 40;
+						}
+						if (g < 150){
+							g += 45;
+						}
+						if (b < 140){
+							b += 50;
+						}
+						console.log("col offset");
 					}
 					
-					var lineSet_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
-/*					if (lineSet_chance >= 85){
-						ctx.fillText("LINE", 5, 200);
+					if (globalChance[20] > 80){
+						console.log("LINE SET");
 						var lWide_w = Math.floor(Math.floor(Math.random() * 11) + 2);
 						cl_x -= 30;
 						cl_y += 15;
 						ctx.fillRect(cl_x, cl_y, 1, 1);
 						cl_x += 3;
-						ctx.fillRect(c1_x, cl_y, lWide_w, 1);
+						ctx.fillRect(cl_x, cl_y, lWide_w, 1);
 						cl_x += lWide_w;
 						ctx.fillRect(cl_x+4, cl_y, 1, 1);
 						ctx.fillRect(cl_x-580, cl_y+86, 1, 1);
 					}
-*/				
-					/*
-					nFill += r; nFill += ", ";
-					nFill += g; nFill += ", ";
-					nFill += b; nFill += ", 1)";
+				
+					var alphaN = 1;
+					nFill += r; nFill += ",";
+					nFill += g; nFill += ",";
+					nFill += b; nFill += ",";
+					nFill += alphaN; nFill += ")";
+					console.log("N: " + nFill + " fill:" + fill);
 					ctx.fillStyle = nFill;
-					ctx.fillRect(cl_x-500, cl_y+65, 1, 2);*/
+					ctx.fillRect(cl_x-500, cl_y+65, 1, 2);
 				}
 				if (space_variance > 3805){
 					space_variance = 1;
 				}
+
+				var baba_amt = Math.floor(Math.floor(Math.random() * 28) + 8);
+				var baba_x = Math.floor(Math.floor(Math.random() * 100) + 0);
+				var baba_y = Math.floor(Math.floor(Math.random() * c.height) + 0);
+				if (globalChance[41] > 90){
+					console.log("space fill:" + baba_amt);
+					ctx.fillRect(baba_x, baba_y, 1, 1);
+					console.log(c.height);
+				}
+				//fractal section -- broken
+/*				var f_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
+				if (f_chance >= 2){
+					frMandel();
+				}
+				var fracPos_x = c.canvas.width-30;
+				var frac_W = Math.floor((c.canvas.width/5)-40);
+				var frac_H = Math.floor((c.canvas.width/4));
+				var f_x = px_x[1776];
+				var f_y = px_y[1776]-150;
+				var fBorder_W = px_x[1776]+frac_W;
+				var fBorder_H = px_y[1776]+frac_H;
+
+				var fr_FILL = true;
+				
+				function frMandel(x,y){
+					var fr_Count = 0;
+					var rC = x;
+					var iC = y;
+					for (var fH = 0; fH < 100; fH++){
+						var tmp_rC = rC * rC - iC * iC + x;
+						var tmp_iC = 2 * rC * iC + y;
+						rC = tmp_rC;
+						iC = tmp_iC;
+					}
+					if (rC * iC < 5){
+						fr_FILL = false;
+						f_x++;
+						if(f_x > fBorder_W){
+							f_x = px_x[1776]-1;
+						}
+						if(f_y > fBorder_H){
+							f_y = px_y[1776]-1;
+						}
+						fr_Count++;
+						if(fr_Count > frac_W * frac_H){
+							break;
+						}
+					}
+					else if (fr_FILL == true){
+						ctx.fillRect(f_x, f_y, 1, 1);
+						f_x++;
+						fr_Count++;
+						fr_FILL = false;
+						if(fr_Count > frac_W * frac_H){
+							break;
+						}
+					}
+				}
+*/				
 			}
 			if (textPosY > 430){
 				textPosY = 35;
@@ -553,29 +673,229 @@ function pixelAAA()
 			}
 		}
 	}
+	if (count > 40){  //wave  --  fix gutter & wv_L
+		count = 0;
+		if (wvSwitch == true){
+			var wv_x = 0;
+			var wv_y = px_y[994];
+			var wv_L = Math.floor(Math.floor(Math.random() * 42) + 2);
+			var wv_H = Math.floor(Math.floor(Math.random() * 26) + 1);
+			var stepAMT = Math.floor(Math.floor(Math.random() * 4) + 1);
+			var clearW = (wv_L*31)-50;
+			var spacePos_y = Math.floor(Math.floor(Math.random() * 20) + 1);
+			var wvDirection = Math.floor(Math.floor(Math.random() * 100) + 0);
+			var wv_gutter = 0;
+			showColor.fillText("_           __                           -" + wv_y-60, px_x[670], px_x[670]); 
+			ctx.clearRect(px_x[1111], px_y[1111], clearW, 1);
+			ctx.clearRect(px_x[1112], px_y[1111], 30, 1);
+			while (wv_x < 3850) {
+				wv_H = Math.floor(Math.floor(Math.random() * 26) + 1);
+				
+				showColor.fillText("Active", 1190, 110); 
+				if (wvDirection > 85){
+					showColor.fillText("gutter", 230, 22); 
+					wv_gutter++;
+					if (wv_gutter > 10){
+						wv_gutter = 0;
+					}
+				}
+				//showColor.fillText("wv_y: " + wv_y, 250, 10); 
+				ctx.fillRect(wv_x+wv_gutter, wv_y, wv_L, wv_H);
+				ctx.clearRect(wv_x+wv_gutter+2, wv_y+spacePos_y, wv_L-1, 1);
+				wv_x += wv_L;
+				if (wvDirection > 76){
+					wv_L = 2;
+				}
+				if(wvDirection >= 50){
+					wv_y -= stepAMT;
+				}
+				else if(wvDirection < 50){
+					wv_y += stepAMT;
+				}
+				if(wvDirection < 88){
+					wv_H = 80;
+				}
+				if (wvDirection > 76){
+					wv_L = Math.floor(Math.floor(Math.random() * 92) + 2);
+				}
+				wvDirection = Math.floor(Math.floor(Math.random() * 100) + 0);
+/*				if (wv_x > 3840){
+					wv_x = 0;
+					break;
+				}*/
+				
+			}
+			var wvCL_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
+			var wvCL_amt = Math.floor(Math.floor(Math.random() * 45) + 6);
+			var wvCL_x = px_x[1450];
+			var wvCL_y = px_y[1450]-42;
+			if(wvCL_chance > 30 && wvCL_chance < 47){
+				for (var wwv = 0; wwv < wvCL_amt; wwv++){
+					var wvCL_w = Math.floor(Math.floor(Math.random() * 88) + 2);
+					var wvCL_flip = Math.floor(Math.floor(Math.random() * 100) + 0);	
+					if(wvCL_flip >= 50){
+						wvCL_x -= wvCL_w;
+						if (wvCL_flip >= 90){
+							wvCL_x -= 10;
+						}
+					}				
+					ctx.fillRect(wvCL_x, wvCL_y, wvCL_w, 1);
+					wvCL_y -= 2;
+				}
+			}
+			if(wvCL_chance > 10 && wvCL_chance < 26){
+				wvCL_x = px_x[1460];
+			}
+			
+		}
+
+		
+	}
+	if (globalCount % 88 == 0){  //px pyramid
+		console.log("amb Check"); //showColor.fillText("amb CHECK", 230, 10); 
+		var amb_xShift = 30;
+		var amb_yShift = 10;
+		var ambX = px_x[1575]-amb_xShift;
+		var ambY = (px_y[1575]-20)-amb_yShift;
+		var amb_L = Math.floor(Math.floor(Math.random() * 880) + 300);
+		var amb_gutter = Math.floor(Math.floor(Math.random() * 8) + 3);	
+		var ambEdge = px_x[1575]+amb_L;
+		var amb_amt = Math.floor(Math.floor(Math.random() * 460) + 190);	
+		if (globalChance[2] > 60){
+			amb_amt = 1120;
+			ctx.fillRect(ambX,ambY-102, 130, 1);
+			ctx.fillRect(ambX+135,ambY-102, 10, 2);
+		}
+		for (var jjp = 0; jjp < amb_amt; jjp++){
+			ctx.fillRect(ambX,ambY, 2, 1);
+			ambX += (amb_gutter+2);
+			if (ambX > ambEdge){
+				amb_xShift += 25;
+				amb_yShift += 12;
+				ambX = px_x[1575]-amb_xShift;
+				ambY = px_y[1575]+amb_yShift;
+				if (amb_L > 600){
+					ambEdge -= (amb_L/2)-35;
+				}
+				else if(amb_L < 600){
+					ambEdge += (amb_L/2)-35;
+				}
+			}
+		}
+	}
+	
+	if (globalCount % 2 == 0){  //splat
+		var iid_L = Math.floor(Math.random() * 400) + 35;
+		var iid_H = Math.floor(Math.random() * 330) + 70;
+		var imgD = ctx.createImageData(px_x[1445],px_y[1445]);/*
+		for (var ol = 0; ol < imgD.data.length; ol += 4){
+			imgD.data[ol + 0] = 2; 
+			imgD.data[ol + 1] = 2;
+			imgD.data[ol + 2] = 2;
+			imgD.data[ol + 3] = 60;
+		}
+		ctx.putImageData(iid_L, iid_H, 30); 
+		console.log("imgD"); THIS LOOP & CONSOLE LOG BREAKS GLOBAL COUNT????*/
+	}
+	
+}
+
+function clear(){  //clear px -- doesn't run wtf 
+	var CLRsmall_w = [];
+	var CLRbig_w = [];
+	var CLR_x = [];
+	var CLR_y = [];
+	var clr_chance = Math.floor(Math.floor(Math.random() * 200) + 0);
+
+	for (var ji = 0; ji < 1000; ji++){
+		CLRsmall_w[i] = Math.floor(Math.floor(Math.random() * 20) + 1);
+		CLRbig_w[i] = Math.floor(Math.floor(Math.random() * 264) + 40);
+		CLR_x[i] = Math.floor(Math.floor(Math.random() * canvas.length) + 0);
+		CLR_y[i] = Math.floor(Math.floor(Math.random() * canvas.height) + 0);
+	}
+	ctx.clearRect(CLR_x[120], CLR_y[120], 1, 3);
+	ctx.fillRect(100, 100, 2500,300);
+	ctx.clearRect(50, 200, 2000, 300);
+	showColor.fillText("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW", 5, 24); 
+}
+function saveIMG(){  //todo
+	var cvsData = canvas.toDataURL();
+}
+//DL.addEventListener('click', saveIMG, )
+function wvToggle(){
+	wvSwitch = !wvSwitch;
+	wvDisplay();
+}
+function wvDisplay(){
+	showColor.fillStyle = "rgba(255,255,20,1)";
+	showColor.fillRect(3, 15, 76, 10);
+	showColor.fillStyle = "rgba(0,0,0,1)";
+	if (wvSwitch == true){
+		showColor.fillText("Wave TRUE", 5, 24); 
+	}
+	else if (wvSwitch == false){
+		showColor.fillText("Wave FALSE", 5, 24); 
+	}
+}
+function grdToggle(){
+	top_grad = !top_grad;
+	grdDisplay();
+}
+function grdDisplay(){
+	showColor.fillStyle = "rgba(240,170,255,1)";
+	showColor.fillRect(81, 15, 74, 10);
+	showColor.fillStyle = "rgba(0,0,0,1)";
+	if (top_grad == true){
+		showColor.fillText("grad TRUE", 82, 24); 
+	}
+	else if (top_grad == false){
+		showColor.fillText("grad FALSE", 82, 24); 
+	}
 }
 function pixelz(){
 	timesRun = 1;
-	pxSets = 1;
+	pxSets = false;
 	amt = 96;
 	pixelAAA();
+	wvDisplay();  grdDisplay();
 }
 function pixelz3(){
 	timesRun = 3;
-	pxSets = 1;
+	pxSets = false;
 	amt = 96;
 	pixelAAA();
+	wvDisplay();  grdDisplay();
 }
 function pxSETS(){  //set of blocks 
 	timesRun = 1;
-	pxSets = 3;
+	pxSets = true;
 	amt = 14;
 	pixelAAA();
+	wvDisplay();  grdDisplay();
 }
-function pxSETS4(){
-	timesRun = 4;
-	pxSets = 3;
+function pxSETS3(){
+	timesRun = 3;
+	pxSets = true;
 	amt = 14;
 	pixelAAA();
+	wvDisplay();  grdDisplay();
+}
+function bunch(){
+	timesRun = 4;
+	pixelz3();
+	pxSETS3();
+	for (var llj = 0; llj < 56; llj++){
+		pxSets = true; 
+		amt = 56;
+		pixelAAA();
+	}
+	for (var llk = 0; llk < 72; llk++){
+		pxSets = false;
+		amt = 138;
+		pixelAAA();
+	}
+	pixelz3();
+	pxSETS3();
+	wvDisplay();  grdDisplay();
 }
 </script><br></body></html>
