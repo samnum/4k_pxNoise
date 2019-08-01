@@ -6,12 +6,15 @@
 <div class = "buttons">
 <input type="submit" value="Run px Scatter [1]" onclick="pixelz()" />
 <input type="submit" value="[3]" onclick="pixelz3()" />
-|| <input type="submit" value="Wave ON/OFF" onclick="wvToggle()" />
+|| <input type="submit" value="Wave ON/OFF" onclick="wvToggle()" />		<input type="submit" value="clr Wave ON/OFF" onclick="ClrwvToggle()" />
 <input type="submit" value="Grad ON/OFF" onclick="grdToggle()" />
+<input type="submit" value="px ON/OFF" onclick="scatterToggle()" />
+<input type="submit" value="set ON/OFF" onclick="pxSetsToggle()" />
+
 || <input type="submit" value="Run px Clear" onclick="clear()" />
 <br><input type="submit" value="Run px Sets [1]" onclick="pxSETS()" />
 <input type="submit" value="[3]" onclick="pxSETS3()" />
-# <input type="submit" value="Fill" onclick="bunch()" />
+# <input type="submit" value="Fill" onclick="bunch()" /> , <input type="submit" value="{test}" onclick="counterUp()" />
 
 </div>
 <br> <canvas id="COLORDISPLAY" width="3840" height="440" style="border:1px solid #ff0ffe"></canvas>
@@ -28,8 +31,17 @@ var amt = 96;
 var count = 0;
 var globalCount = 0;
 var wvSwitch = true;
+var clrwvSwitch = true;
 var top_grad = true;
+var PXaction = true;
+var scatterSwitch = true;
 
+function counterUp(){
+	console.log("count: " + count + " | globalCount: " + globalCount);
+	console.log(PXaction);
+	pxSets = false;		wvSwitch = false;	top_grad = false;	pxSets = false;		PXaction = false;
+	pixelAAA();
+}
 function pixelAAA(){
 	count++;	    globalCount++;
 	showColor.fillStyle = "rgba(0,0,0,1)";
@@ -327,9 +339,7 @@ function pixelAAA(){
 				r = 250;
 			}
 			var alpha = 1;
-			fill += r; fill += ",";
-			fill += g; fill += ",";
-			fill += b; fill += ",";
+			fill += r; fill += ",";		fill += g; fill += ",";		fill += b; fill += ",";
 			fill += alpha; fill += ")";
 			var yDrop = 0;
 			if (y_chance > 20 && top_grad == true){
@@ -360,23 +370,20 @@ function pixelAAA(){
 			ctx.fillStyle = fill;  showColor.fillStyle = fill;
 			showColor.font = "12px Courier New";
 			showColor.fillText("▅ " + fill, textPosX, textPosY);
-			showColor.fillText("count: " + count, 182, 10); 
-			showColor.fillText("globalCount: " + globalCount, 180, 22); 
+			showColor.fillText("count: " + count, 262, 10); showColor.fillText("globalCount: " + globalCount, 260, 22); 
 			textPosY += 17;
-			if (pxSets == false){  //px scatter
-				showColor.fillText("px scatter", 10, 10);
+			if (scatterSwitch == true && PXaction == true){  //px scatter
 				var ww_Variance = Math.floor(Math.floor(Math.random() * 3) + 0);	
 				ctx.fillRect(px_x[x_index], px_y[y_index]+yDrop, px_w+ww_Variance, px_h);
 				ctx.fillRect(px_x[x_index]-xVariance, px_y[y_index]+yDrop, px_w+(ww_Variance*2), px_h);
 				ctx.fillRect(px_x[x_index], px_y[y_index]-70+yDrop, px_w-ww_Variance, px_h);
 				ctx.fillRect(px_x[x_index]+160-xVariance, px_y[y_index]-yVariance+yDrop, px_w, px_h);
-				ctx.fillRect(px_x[x_index]+512, px_y[y_index]+yDrop*2, px_w, px_h);
-				ctx.fillRect(px_x[x_index]-512, px_y[y_index]+yDrop*2, px_w, px_h);
+				ctx.fillRect(px_x[x_index]+482, px_y[y_index]+yDrop*2, px_w, px_h);
+				ctx.fillRect(px_x[x_index]-482, px_y[y_index]+yDrop*2, px_w, px_h);
 				ctx.fillRect(px_x[x_index]-(172+xVariance), px_y[y_index]-yVariance+yDrop, px_w, px_h);
 				ctx.fillRect(px_x[x_index]+xVariance, px_y[y_index]+yVariance+yDrop, px_w, px_h);  //x,y,w,h
 			}
-			if (pxSets == true){  //px set
-				showColor.fillText("px set", 10, 10);
+			if (pxSets == true && PXaction == true){  //px set
 				if (colorForce_chance > 90){
 					r = 188;
 					g = 247;
@@ -478,6 +485,7 @@ function pixelAAA(){
 					var nFill = "rgba (";
 					if (x_chance == 10 && reduce_chance == 10){
 						cl_h = 200;
+						ctx.clearRect(cl_x-(h_Variance*2), cl_y, 1, 16);
 					}
 					//ctx.fillStyle = fill;
 					ctx.fillRect(cl_x, cl_y, cl_w, cl_h);
@@ -579,11 +587,11 @@ function pixelAAA(){
 						if (b < 140){
 							b += 50;
 						}
-						console.log("col offset");
+						//console.log("col offset");
 					}
 					
 					if (globalChance[20] > 80){
-						console.log("LINE SET");
+						//console.log("LINE SET");
 						var lWide_w = Math.floor(Math.floor(Math.random() * 11) + 2);
 						cl_x -= 30;
 						cl_y += 15;
@@ -600,7 +608,7 @@ function pixelAAA(){
 					nFill += g; nFill += ",";
 					nFill += b; nFill += ",";
 					nFill += alphaN; nFill += ")";
-					console.log("N: " + nFill + " fill:" + fill);
+					//console.log("N: " + nFill + " fill:" + fill);
 					ctx.fillStyle = nFill;
 					ctx.fillRect(cl_x-500, cl_y+65, 1, 2);
 				}
@@ -612,9 +620,9 @@ function pixelAAA(){
 				var baba_x = Math.floor(Math.floor(Math.random() * 100) + 0);
 				var baba_y = Math.floor(Math.floor(Math.random() * c.height) + 0);
 				if (globalChance[41] > 90){
-					console.log("space fill:" + baba_amt);
+					//console.log("space fill:" + baba_amt);
 					ctx.fillRect(baba_x, baba_y, 1, 1);
-					console.log(c.height);
+					//console.log(c.height);
 				}
 				//fractal section -- broken
 /*				var f_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
@@ -673,24 +681,30 @@ function pixelAAA(){
 			}
 		}
 	}
-	if (count > 40){  //wave  --  fix gutter & wv_L
+	var waveFREQ = 6;
+	if (globalCount > 200){
+		waveFREQ = 40;
+	}
+	if (count > waveFREQ){  //wave
 		count = 0;
 		if (wvSwitch == true){
 			var wv_x = 0;
 			var wv_y = px_y[994];
-			var wv_L = Math.floor(Math.floor(Math.random() * 42) + 2);
+			var wv_L = Math.floor(Math.floor(Math.random() * 34) + 2);
 			var wv_H = Math.floor(Math.floor(Math.random() * 26) + 1);
-			var stepAMT = Math.floor(Math.floor(Math.random() * 4) + 1);
+			var stepAMT = Math.floor(Math.floor(Math.random() * 5) + 1);
 			var clearW = (wv_L*31)-50;
 			var spacePos_y = Math.floor(Math.floor(Math.random() * 20) + 1);
 			var wvDirection = Math.floor(Math.floor(Math.random() * 100) + 0);
 			var wv_gutter = 0;
 			showColor.fillText("_           __                           -" + wv_y-60, px_x[670], px_x[670]); 
 			ctx.clearRect(px_x[1111], px_y[1111], clearW, 1);
-			ctx.clearRect(px_x[1112], px_y[1111], 30, 1);
+			ctx.clearRect(px_x[1112], px_y[1111], 28, 1);
 			while (wv_x < 3850) {
 				wv_H = Math.floor(Math.floor(Math.random() * 26) + 1);
-				
+				if (wv_L > 20 && wv_H > 12){
+					wv_H -= 10;		wv_L += 2;
+				}
 				showColor.fillText("Active", 1190, 110); 
 				if (wvDirection > 85){
 					showColor.fillText("gutter", 230, 22); 
@@ -699,7 +713,7 @@ function pixelAAA(){
 						wv_gutter = 0;
 					}
 				}
-				//showColor.fillText("wv_y: " + wv_y, 250, 10); 
+				//console.log("wv_y: " + wv_y); 
 				ctx.fillRect(wv_x+wv_gutter, wv_y, wv_L, wv_H);
 				ctx.clearRect(wv_x+wv_gutter+2, wv_y+spacePos_y, wv_L-1, 1);
 				wv_x += wv_L;
@@ -713,23 +727,18 @@ function pixelAAA(){
 					wv_y += stepAMT;
 				}
 				if(wvDirection < 88){
-					wv_H = 80;
+					wv_H = 70;
 				}
 				if (wvDirection > 76){
 					wv_L = Math.floor(Math.floor(Math.random() * 92) + 2);
 				}
-				wvDirection = Math.floor(Math.floor(Math.random() * 100) + 0);
-/*				if (wv_x > 3840){
-					wv_x = 0;
-					break;
-				}*/
-				
+				wvDirection = Math.floor(Math.floor(Math.random() * 100) + 0);				
 			}
 			var wvCL_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
 			var wvCL_amt = Math.floor(Math.floor(Math.random() * 45) + 6);
 			var wvCL_x = px_x[1450];
 			var wvCL_y = px_y[1450]-42;
-			if(wvCL_chance > 30 && wvCL_chance < 47){
+			if(wvCL_chance > 30 && wvCL_chance < 50){
 				for (var wwv = 0; wwv < wvCL_amt; wwv++){
 					var wvCL_w = Math.floor(Math.floor(Math.random() * 88) + 2);
 					var wvCL_flip = Math.floor(Math.floor(Math.random() * 100) + 0);	
@@ -746,65 +755,243 @@ function pixelAAA(){
 			if(wvCL_chance > 10 && wvCL_chance < 26){
 				wvCL_x = px_x[1460];
 			}
-			
 		}
-
-		
 	}
-	if (globalCount % 88 == 0){  //px pyramid
-		console.log("amb Check"); //showColor.fillText("amb CHECK", 230, 10); 
-		var amb_xShift = 30;
-		var amb_yShift = 10;
-		var ambX = px_x[1575]-amb_xShift;
-		var ambY = (px_y[1575]-20)-amb_yShift;
-		var amb_L = Math.floor(Math.floor(Math.random() * 880) + 300);
-		var amb_gutter = Math.floor(Math.floor(Math.random() * 8) + 3);	
+	if (globalCount % 36 == 0 && PXaction == true){  //px pyramid 
+		console.log("pyramid check"); //showColor.fillText("amb CHECK", 230, 10); 
+		var amb_xShift = 30 + Math.floor(Math.floor(Math.random() * 16) + 6);
+		var amb_yShift = 12 + Math.floor(Math.floor(Math.random() * 14) + 1);
+		var ambX = px_x[1575];
+		var ambStep = 2;
+		var ambY = px_y[1575]-60;
+		var ambH = Math.floor(Math.floor(Math.random() * 5) + 2);
+		var amb_L = Math.floor(Math.floor(Math.random() * 1150) + 520);
+		var amb_gutter = Math.floor(Math.floor(Math.random() * 10) + 3);	
 		var ambEdge = px_x[1575]+amb_L;
-		var amb_amt = Math.floor(Math.floor(Math.random() * 460) + 190);	
-		if (globalChance[2] > 60){
-			amb_amt = 1120;
-			ctx.fillRect(ambX,ambY-102, 130, 1);
-			ctx.fillRect(ambX+135,ambY-102, 10, 2);
+		var amb_amt = Math.floor(Math.floor(Math.random() * 706) + 330);	
+		for (var i = 0; i < amb_amt; i++){
+			//console.log("_x: " + ambX + " _y: " + ambY);
+			ctx.fillRect(ambX,ambY,1,ambH);
+			ambX += amb_gutter;
+			if(ambX > ambEdge){
+				console.log("Edge");
+				ambEdge += 5;
+				ambX = px_x[1575] += amb_xShift;
+				ambY += amb_yShift;
+				ambStep++;
+				amb_gutter++;
+			}
+			ambH = Math.floor(Math.floor(Math.random() * 3) + 1);
 		}
-		for (var jjp = 0; jjp < amb_amt; jjp++){
-			ctx.fillRect(ambX,ambY, 2, 1);
-			ambX += (amb_gutter+2);
-			if (ambX > ambEdge){
-				amb_xShift += 25;
-				amb_yShift += 12;
-				ambX = px_x[1575]-amb_xShift;
-				ambY = px_y[1575]+amb_yShift;
-				if (amb_L > 600){
-					ambEdge -= (amb_L/2)-35;
+	}
+	
+	if (globalCount % 18 == 0 && PXaction == true){  // home home home home 
+		var hmPOS_var = Math.floor(Math.random() * 78) + 3;
+		var hmSIZE_var = Math.floor(Math.random() * 6) + 3;
+		var hm_gutter = Math.floor(Math.random() * 10) + 3;
+		var LN_amt = Math.floor(Math.random() * 21) + 3;
+		var hm_clearH = Math.floor(Math.random() * 102) + 12;
+		var hm_x = px_x[1555];	var hm_y = px_y[1555];
+		var drawDirection = globalChance[1555];
+		ctx.fillRect(px_x[1555],px_y[1555],1,1);	ctx.fillRect(px_x[1555]+2,px_y[1555]+1,1,1);
+		ctx.fillRect(px_x[1555]-2,px_y[1555]-1,1,1);	ctx.fillRect(px_x[1555]-100,px_y[1555]-2,1,1);
+		console.log("home, x: " + hm_x + " -- y: " + hm_y + " -- LN_amt: " + LN_amt);
+		
+		function hm_refreshVar(){
+			hmSIZE_var = Math.floor(Math.random() * 4) + 2;
+			hmPOS_var = Math.floor(Math.random() * 16) + 4;
+			hm_gutter = Math.floor(Math.random() * 15) + 4;
+			if(globalChance[246] > 50){
+				hm_gutter -= 3;
+			}
+			else{
+				hm_gutter +=4;
+			}
+		}
+		var clearStep = 3;
+		function hm_clearLine(){
+			ctx.clearRect(hm_x-7,hm_y-5,1,2);
+			if(globalChance[50] > 70){
+				ctx.clearRect(hm_x-4,hm_y-clearStep,1,hm_clearH);
+				clearStep += Math.floor(Math.random() * 47) + 11;
+			}
+		}
+		function hm_spread(){
+			if (LN_amt > 6){
+						hm_gutter += 2;		hmSIZE_var -= 1;
+					}
+		}
+		if (drawDirection >= 50){
+			if (drawDirection <= 75){  //N
+				ctx.fillRect(hm_x, hm_y-20,2,5);	ctx.fillRect(hm_x+12, hm_y-10,1,3);
+				for (var hmm = 0; hmm < LN_amt; hmm++){
+					hm_spread();
+					ctx.fillRect(hm_x-hmPOS_var,hm_y-hm_gutter,hmSIZE_var-1,hmSIZE_var);
+					hm_y -= 4;
+					ctx.fillRect(hm_x-(hmPOS_var*23),hm_y-hm_gutter,3,1);
+					hm_refreshVar();
+					if(globalChance[143] > 40){
+						hm_clearLine();
+					}
 				}
-				else if(amb_L < 600){
-					ambEdge += (amb_L/2)-35;
+			}
+			if (drawDirection > 75){  //E
+				ctx.fillRect(hm_x+20, hm_y,2,5);	ctx.fillRect(hm_x+10, hm_y-12,1,3);
+				for (var hmm = 0; hmm < LN_amt; hmm++){
+					ctx.fillRect(hm_x+hm_gutter,hm_y+hmPOS_var,hmSIZE_var,hmSIZE_var-1);
+					hm_x += 4;
+					ctx.fillRect(hm_x+hm_gutter,hm_y+(hmPOS_var*23),1,3);
+					hm_refreshVar();
+					if(globalChance[143] > 40){
+						hm_clearLine();
+					}
+				}
+			}
+		}
+		else if (drawDirection < 50){
+			if (drawDirection <= 25){  //S
+				ctx.fillRect(hm_x, hm_y+20,2,5);	ctx.fillRect(hm_x-12, hm_y+10,1,3);
+				for (var hmm = 0; hmm < LN_amt; hmm++){
+					hm_spread();
+					ctx.fillRect(hm_x-hmPOS_var,hm_y+hm_gutter,hmSIZE_var-1,hmSIZE_var);
+					hm_y += 4;
+					ctx.fillRect(hm_x-(hmPOS_var*23),hm_y+hm_gutter,3,1);
+					hm_refreshVar();
+					if(globalChance[143] > 40){
+						hm_clearLine();
+					}
+				}
+			}
+			if (drawDirection > 25){  //W
+				ctx.fillRect(hm_x-20, hm_y,2,5);	ctx.fillRect(hm_x-10, hm_y+12,1,3);
+				for (var hmm = 0; hmm < LN_amt; hmm++){
+					hm_spread();
+					ctx.fillRect(hm_x-hm_gutter,hm_y-hmPOS_var,hmSIZE_var,hmSIZE_var-1);
+					hm_x -= 4;
+					ctx.fillRect(hm_x-hm_gutter,hm_y-(hmPOS_var*23),1,3);
+					hm_refreshVar();
+					if(globalChance[143] > 40){
+						hm_clearLine();
+					}
 				}
 			}
 		}
 	}
-	
-	if (globalCount % 2 == 0){  //splat
-		var iid_L = Math.floor(Math.random() * 400) + 35;
-		var iid_H = Math.floor(Math.random() * 330) + 70;
-		var imgD = ctx.createImageData(px_x[1445],px_y[1445]);/*
-		for (var ol = 0; ol < imgD.data.length; ol += 4){
-			imgD.data[ol + 0] = 2; 
-			imgD.data[ol + 1] = 2;
-			imgD.data[ol + 2] = 2;
-			imgD.data[ol + 3] = 60;
+	if (globalCount > 110 && globalCount % 10 == 0 && clrwvSwitch == true){  //spaced clear wwave
+		//ctx.fillRect(1,1,3500,420);
+		var spc_x = px_x[1772];		var spc_y = px_y[1772];
+		for (var i = 0; i < 7; i++){
+			ctx.fillRect(spc_x,spc_y,1,3);
+			spc_x -= 4; spc_y += 2;
 		}
-		ctx.putImageData(iid_L, iid_H, 30); 
-		console.log("imgD"); THIS LOOP & CONSOLE LOG BREAKS GLOBAL COUNT????*/
+		spc_x = px_x[1772]+300;		spc_y = px_y[1772]-5;
+		var spc_gutter = Math.floor(Math.floor(Math.random() * 20) + 10);
+		var spc_step = Math.floor(Math.floor(Math.random() * 18) + 12);
+		var st_amt = Math.floor(Math.floor(Math.random() * 25) + 9);
+		ctx.clearRect(spc_x,spc_y,2,1);
+		var st_wwX = 2;
+		var st_direction = Math.floor(Math.floor(Math.random() * 100) + 1);
+		for (var i = 0; i < st_amt; i++){  //fill wiggle
+			if (st_direction > 50){
+				spc_y -= 4;
+				if (st_direction > 78){
+					spc_y -= 10;
+					st_amt++;
+				}
+			}
+			else{
+				spc_y += 4;
+			}
+			ctx.fillRect(spc_x,spc_y,2,2);
+			spc_x -= (spc_gutter-3)*2;
+			st_direction = Math.floor(Math.floor(Math.random() * 100) + 1);
+			spc_gutter = Math.floor(Math.floor(Math.random() * 16) + 8);
+		}
+		spc_x = px_x[1772];		spc_y = px_y[1772];  //refresh
+		var spc_direction = Math.floor(Math.floor(Math.random() * 100) + 1);
+		var SS_step = Math.floor(Math.floor(Math.random() * 7) + 2);
+		var spc_H = Math.floor(Math.floor(Math.random() * 8) + 3);
+		var spc_count = 0;
+		while (spc_x > 2){
+			spc_count++;
+			if(spc_direction >= 50){
+				spc_y -= SS_step;
+			}
+			else{
+				spc_y += SS_step;
+			}
+			ctx.clearRect(spc_x,spc_y,1,spc_H);		ctx.clearRect(spc_x+140,spc_y-140,1,spc_H);
+			spc_x -= spc_gutter;
+			spc_direction = Math.floor(Math.floor(Math.random() * 100) + 1);
+			SS_step = Math.floor(Math.floor(Math.random() * 6) + 1);
+			spc_gutter = Math.floor(Math.floor(Math.random() * 17) + 2);
+			spc_H = Math.floor(Math.floor(Math.random() * 3) + 1);
+			if(spc_count % 14 == 0){
+				var spc_add = 1;
+				var spc_special = spc_y+spc_add;
+				if(spc_y >= 210){
+					spc_special -= 152;
+					spc_add += 25;
+				}
+				else{
+					spc_special += 152;
+					spc_add -= 25;
+				}
+				ctx.clearRect(spc_x+110,spc_special,4,1);
+			}
+			if(spc_count % 7 == 0){
+				var spc_WW = Math.floor(Math.floor(Math.random() * 5) + 2);
+				var spc_HH = Math.floor(Math.floor(Math.random() * 5) + 2);
+				var spc_Ymm = spc_y+3;
+				var placeVar = Math.floor(Math.floor(Math.random() * 32) + 8);
+				if (spc_WW > spc_HH){
+					spc_HH = 1;
+					if(globalChance[166] >= 50){
+						spc_Ymm -= (spc_WW*15)-12;
+					}
+					else{
+						spc_Ymm += (spc_WW*15)-12;
+					}
+				}
+				else if (spc_WW < spc_HH){
+					spc_WW = 1;
+					if(globalChance[166] >= 50){
+						spc_Ymm -= (spc_HH*15)-12;
+					}
+					else{
+						spc_Ymm += (spc_HH*15)-12;
+					}
+				}
+				else{
+					spc_WW = 1;		spc_HH = 1;
+					
+				}
+				ctx.clearRect(spc_x-placeVar,spc_Ymm,spc_WW,spc_HH);
+			}
+			var backChance = Math.floor(Math.floor(Math.random() * 100) + 1);
+			var backDir = Math.floor(Math.floor(Math.random() * 100) + 1);
+			if(spc_count % 10 == 0 && backChance < 8){
+				console.log("back x= " + spc_x);
+				spc_x += 202;
+				if(backDir >= 50){
+					spc_y += 21;
+				}
+				else if(backDir < 50){
+					spc_y -= 21;
+				}
+			}
+			var spc_nPlacement = Math.floor(Math.floor(Math.random() * 420) + 1);
+			if (spc_y > 420 || spc_y < 0){
+				spc_y = spc_nPlacement;
+				spc_x += 30;
+			}
+		}
 	}
-	
 }
 
 function clear(){  //clear px -- doesn't run wtf 
-	var CLRsmall_w = [];
-	var CLRbig_w = [];
-	var CLR_x = [];
-	var CLR_y = [];
+	var CLRsmall_w = [];	var CLRbig_w = [];
+	var CLR_x = [];		var CLR_y = [];
 	var clr_chance = Math.floor(Math.floor(Math.random() * 200) + 0);
 
 	for (var ji = 0; ji < 1000; ji++){
@@ -816,7 +1003,7 @@ function clear(){  //clear px -- doesn't run wtf
 	ctx.clearRect(CLR_x[120], CLR_y[120], 1, 3);
 	ctx.fillRect(100, 100, 2500,300);
 	ctx.clearRect(50, 200, 2000, 300);
-	showColor.fillText("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW", 5, 24); 
+	console.log("WWWWWWWWWWWWWWWWWWWWWW")
 }
 function saveIMG(){  //todo
 	var cvsData = canvas.toDataURL();
@@ -837,65 +1024,103 @@ function wvDisplay(){
 		showColor.fillText("Wave FALSE", 5, 24); 
 	}
 }
+function ClrwvToggle(){
+	clrwvSwitch = !clrwvSwitch;
+	clrwvDisplay();
+}
+function clrwvDisplay(){
+	showColor.fillStyle = "rgba(245,245,170,1)";
+	showColor.fillRect(81, 15, 74, 10);
+	showColor.fillStyle = "rgba(0,0,0,1)";
+	if (clrwvSwitch == true){
+		showColor.fillText("clWV TRUE", 82, 24); 
+	}
+	else if (clrwvSwitch == false){
+		showColor.fillText("clWV FALSE", 82, 24); 
+	}
+}
 function grdToggle(){
 	top_grad = !top_grad;
 	grdDisplay();
 }
 function grdDisplay(){
 	showColor.fillStyle = "rgba(240,170,255,1)";
-	showColor.fillRect(81, 15, 74, 10);
+	showColor.fillRect(157, 15, 74, 10);
 	showColor.fillStyle = "rgba(0,0,0,1)";
 	if (top_grad == true){
-		showColor.fillText("grad TRUE", 82, 24); 
+		showColor.fillText("grad TRUE", 160, 24); 
 	}
 	else if (top_grad == false){
-		showColor.fillText("grad FALSE", 82, 24); 
+		showColor.fillText("grad FALSE", 160, 24); 
 	}
 }
 function pixelz(){
 	timesRun = 1;
-	pxSets = false;
-	amt = 96;
+	amt = 70;
 	pixelAAA();
-	wvDisplay();  grdDisplay();
+	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();
 }
 function pixelz3(){
 	timesRun = 3;
-	pxSets = false;
-	amt = 96;
+	amt = 76;
 	pixelAAA();
-	wvDisplay();  grdDisplay();
+	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();
 }
+function scatterToggle(){
+	scatterSwitch = !scatterSwitch;
+	scttDisplay();
+}
+function scttDisplay(){
+	showColor.fillStyle = "rgba(90,170,255,1)";
+	showColor.fillRect(2,2,74,10);
+	showColor.fillStyle = "rgba(0,0,0,1)";
+	if (scatterSwitch == true){
+		showColor.fillText("sctt TRUE",4,11); 
+	}
+	else if (scatterSwitch == false){
+		showColor.fillText("sctt FALSE",4,11); 
+	}
+}
+function pxSetsToggle(){
+	pxSets = !pxSets;
+	pxSetDisplay();
+}
+function pxSetDisplay(){
+	showColor.fillStyle = "rgba(255,110,110,1)";
+	showColor.fillRect(81,3,74,10);
+	showColor.fillStyle = "rgba(0,0,0,1)";
+	if (pxSets == true){
+		showColor.fillText("Sets TRUE",82,11); 
+	}
+	else if (pxSets == false){
+		showColor.fillText("Sets FALSE",82,11); 
+	}
+}
+
 function pxSETS(){  //set of blocks 
 	timesRun = 1;
-	pxSets = true;
 	amt = 14;
 	pixelAAA();
-	wvDisplay();  grdDisplay();
+	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();
 }
 function pxSETS3(){
 	timesRun = 3;
-	pxSets = true;
 	amt = 14;
 	pixelAAA();
-	wvDisplay();  grdDisplay();
+	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();
 }
 function bunch(){
 	timesRun = 4;
 	pixelz3();
 	pxSETS3();
 	for (var llj = 0; llj < 56; llj++){
-		pxSets = true; 
-		amt = 56;
+		amt = 64;
 		pixelAAA();
 	}
 	for (var llk = 0; llk < 72; llk++){
-		pxSets = false;
 		amt = 138;
 		pixelAAA();
 	}
-	pixelz3();
-	pxSETS3();
-	wvDisplay();  grdDisplay();
+	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();
 }
 </script><br></body></html>
