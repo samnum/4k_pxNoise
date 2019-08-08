@@ -1,44 +1,40 @@
-<!DOCTYPE html><html>
-<head>
-	<title>Pixel GL </title>
-</head>
+<!DOCTYPE html><html><head><title>Pixel GL </title></head>
 <body><canvas id="CANVAS" width="3840" height="420" style="border:1px solid #03107b"></canvas>
 <div class = "buttons">
 <input type="submit" value="Run px Scatter [1]" onclick="pixelz()" />
 <input type="submit" value="[3]" onclick="pixelz3()" />
-|| <input type="submit" value="Wave ON/OFF" onclick="wvToggle()" />		<input type="submit" value="clr Wave ON/OFF" onclick="ClrwvToggle()" />
-<input type="submit" value="Grad ON/OFF" onclick="grdToggle()" />
-<input type="submit" value="px ON/OFF" onclick="scatterToggle()" />
-<input type="submit" value="set ON/OFF" onclick="pxSetsToggle()" />
+|| <input type="submit" value="hard Wave" onclick="wvToggle()" />		<input type="submit" value="clr Wave" onclick="ClrwvToggle()" />
+<input type="submit" value="Grad" onclick="grdToggle()" />
+<input type="submit" value="pixels" onclick="scatterToggle()" />
+<input type="submit" value="setss" onclick="pxSetsToggle()" />
+<input type="submit" value="splat" onclick="splatToggle()" />
 
-|| <input type="submit" value="Run px Clear" onclick="clear()" />
+|| <input type="submit" value="RESET" onclick="reset()" />
 <br><input type="submit" value="Run px Sets [1]" onclick="pxSETS()" />
 <input type="submit" value="[3]" onclick="pxSETS3()" />
 # <input type="submit" value="Fill" onclick="bunch()" /> , <input type="submit" value="{test}" onclick="counterUp()" />
 
 </div>
 <br> <canvas id="COLORDISPLAY" width="3840" height="440" style="border:1px solid #ff0ffe"></canvas>
-<script language="Javascript">
-var c = document.getElementById ("CANVAS");
-var cola = document.getElementById ("COLORDISPLAY");
-var ctx = c.getContext("2d");
-var showColor = cola.getContext("2d");
+<script language="Javascript">		
+//================[ date:  08.08.2019
+var c = document.getElementById ("CANVAS");		var ctx = c.getContext("2d");
+var cola = document.getElementById ("COLORDISPLAY");	var showColor = cola.getContext("2d");
 
 // PIXELS ----------------------------------------------------------------------------------
 var timesRun = 1;
 var pxSets = true;  //1
 var amt = 96;
-var count = 0;
-var globalCount = 0;
+var count = 0;		var globalCount = 0;
 var wvSwitch = true;
 var clrwvSwitch = true;
 var top_grad = true;
 var PXaction = true;
 var scatterSwitch = true;
+var splatSwitch = true;
 
 function counterUp(){
 	console.log("count: " + count + " | globalCount: " + globalCount);
-	console.log(PXaction);
 	pxSets = false;		wvSwitch = false;	top_grad = false;	pxSets = false;		PXaction = false;
 	pixelAAA();
 }
@@ -49,8 +45,7 @@ function pixelAAA(){
 	var textPosY = 38;
 	var textPosX = 15;
 	for (var t = 0; t < timesRun; m = t++){ 
-		var px_x = [];
-		var px_y = [];
+		var px_x = [];		var px_y = [];
 		var rgb_value = [];
 		var px_xBottom = [];  //extra pool for block on bottom
 		var globalChance = [];
@@ -64,8 +59,7 @@ function pixelAAA(){
 		}
 		
 		for (var nyc = 0; nyc < amt; nyc++){
-			var px_w = 1;
-			var px_h = 1;
+			var px_w = 1;		var px_h = 1;
 			var colorForce_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
 			var y_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
 			var xVariance = Math.floor(Math.floor(Math.random() * 880) + 0);
@@ -100,9 +94,7 @@ function pixelAAA(){
 					b -= 160;
 				}
 				else if (r > 242 && g < 60){  //deep red bias
-					r = 255;
-					b = 57;
-					g = 0;
+					r = 255;	b = 57;		g = 0;
 				}
 			}
 			if (g > 200){
@@ -113,13 +105,10 @@ function pixelAAA(){
 					b -= 130;
 				}
 				if (g > 220 && r < 40){  //for bright green bias
-					r = 8;
-					b = 52;
+					r = 8;		b = 52;
 				}
 				else if (g > 240 && b < 100 && r < 60){  //for neon green bias
-					g = 255;
-					b += 100;
-					r = 70;
+					r = 70;		g = 255;	b += 100;
 				}
 			}
 			if (b > 190){
@@ -130,69 +119,51 @@ function pixelAAA(){
 					g -= 130;
 				}
 				else if (b > 226 && g < 42){  //for magenta bias
-					r = 255;
-					g = 0;
+					r = 255;	g = 0;
 				}		
 			}
 			if (r < 92 && r > 34 && g < 25 && b < 80){  //for deep blue bias;
-				r = 0;
-				b = 108;
+				r = 0;		b = 108;
 				if (g > 22){
 					g = 8;
 				}
 			}
 			if (r < 178 && r > 10 && g < 138 && g > 60 && b < 134 && b > 70){  //filter brown shit bias
 				if (r > 50 && g < 128){  //for neon blue ish bias 
-					r = 20;
-					g = 230;
-					b += 116;
+					r = 20;		g = 230;	b += 116;
 					if (b < 230){
 						b = 255;
 					}
 				}
 				else if (r > 50){  //for light purple bias rgba(226,200,255,1)
-					r = 226;
-					g = 200;
-					b = 255;
+					r = 226;	g = 200;	b = 255;
 				}
 				else {  //light green
-					r = 220;
-					g = 255;
-					b += 90;
+					r = 220;	g = 255;	b += 90;
 				}
 			}
 			if (r > 5 && r < 144 && g > 74 && g < 180 && b > 5 && b < 120){  //filter garbage green color
 				var chance_5 = Math.floor(Math.floor(Math.random() * 100) + 0);
 				if (chance_5 < 90){  //rgba(124,112,250,1)
-					r = 124;
-					g = 112;
-					b = 250;
+					r = 124;	g = 112;	b = 250;
 				}
 				if (chance_5 <= 50){  //rgba(212,25,55,1)
-					r = 212;
-					g = 25;
-					b += 15;
+					r = 212;	g = 25;		b += 15;
 				}
 				else {  //rgba(240,120,140,1)
-					r = 246;
-					g = 120;
-					b = 140;
+					r = 246;	g = 120;	b = 140;
 				}
 			}
 			if (r < 118 && g < 118 && b < 118){  //filter dark colors
 				var chance_2 = Math.floor(Math.floor(Math.random() * 100) + 0);
 				if (chance_2 > 65){
-					r += 136;
-					g = 255;
-					b += 90;
+					r += 136;	g = 255;	b += 90;
 					if (b < 220){
 						b += 30;
 					}
 				}
 				else if (chance_2 > 34 && chance_2 < 65){
-					r += 90;
-					g += 108;
-					b = 255;
+					r += 90;	g += 108;	b = 255;
 				}
 				else {
 					r = 255;
@@ -205,23 +176,17 @@ function pixelAAA(){
 				if (g > 35){
 					g -= 32;
 					if (g > 94){  //rgba(200,255,18,1)
-						r = 200;
-						g = 255;
-						b = 18;
+						r = 200;	g = 255;	b = 18;
 					}
 				}
 			}
 			if (r < 240 && r > 142 && g > 50 && g < 130 && b > 50 && b < 112 ){  //filter dark orange
 				var chance_3 = Math.floor(Math.floor(Math.random() * 100) + 0);
 				if (chance_3 >= 52){  //rgba(241,162,255,1)
-					r = 241;
-					g = 162;
-					g = 255;
+					r = 241;	g = 162;	g = 255;
 				}
 				else if (chance_3 > 30 && r > 100){  //rgba(164,255,190,1)
-					r = 164;
-					g = 255;
-					b += 88;
+					r = 164;	g = 255;	b += 88;
 					if (b < 125){
 						b = 200;
 					}
@@ -235,17 +200,14 @@ function pixelAAA(){
 			if (r > 40 && r < 205 && g > 5 && g < 172 && b > 5 && b < 92){  //filter bronzy/gold color
 				var chance_6 = Math.floor(Math.floor(Math.random() * 100) + 0);
 				if (chance_6 <= 52){  //rgba(250,240,160,1)
-					r = 250;
-					g = 240;
-					b += 102;
+					r = 250;	g = 240;	b += 102;
 				}
 				else if (chance_6 > 52){  //
 					r = 202;
 					if (chance_6 > 80){
 						r = 246;
 					}
-					g = 240;
-					b = 255;
+					g = 240;	b = 255;
 				}
 			}
 			if (r > 92 && r < 220 && g > 92 && g < 220 && b > 100 && b < 220)  //filter grey shit bias
@@ -259,32 +221,22 @@ function pixelAAA(){
 					b = 16;
 				}
 				if (chance_1 > 50 && r > 160){  //rgba(156,224,255,1)
-					r += 48;
-					g = 224;
-					b = 255;
+					r += 48;	g = 224;	b = 255;
 				}
 				else if (chance_1 > 45 && b < 220){  //rgba(255,192,150,1)
-					r = 255;
-					g = 192;
-					b -= 38;
+					r = 255;	g = 192;	b -= 38;
 				}
 				else {  //rgba(251,186,251,1)
-					r = 251;
-					g = 186;
-					b = 251;
+					r = 251;	g = 186;	b = 251;
 				}
 			}
 			if (r > 5 && r < 150 && g > 145 && g < 220 && b > 145 && b < 220){  //filter aquamarine shit
 				var chance_4 = Math.floor(Math.floor(Math.random() * 100) + 0);
 				if (chance_4 <= 35){  //rgba(250,112,208,1)
-					r = 250;
-					g = 112;
-					b = 208;
+					r = 250;	g = 112;	b = 208;
 				}
 				else if (chance_4 > 35 && chance_4 <= 70){  //rgba(88,232,180,1)
-					r = 88;
-					g = 232;
-					b += 30;
+					r = 88;		g = 232;	b += 30;
 					if (b < 230){
 						b = 248;
 					}
@@ -313,26 +265,18 @@ function pixelAAA(){
 			}
 			if (colorForce_chance < 5){
 				if (g > 132){  //rgba(198,252,97,1)
-					r = 198;
-					g = 252;
-					b = 97;
+					r = 198;	g = 252;	b = 97;
 				}
 				else {  //rgba(6,19,196,1)
-					r = 6;
-					g = 19;
-					b = 196;
+					r = 6;		g = 19;		b = 196;
 				}
 			}
 			if(colorForce_chance > 10 && colorForce_chance < 15){
 				if (r > 120){  //rgba(227,16,88,1)
-					r = 227;
-					g = 16;
-					b = 88;
+					r = 227;	g = 16;		b = 88;
 				}
 				else {  //#8702d5
-					r = 135;
-					g = 2;
-					b = 213;
+					r = 135;	g = 2;		b = 213;
 				}
 			}
 			if (r > 255){
@@ -385,19 +329,16 @@ function pixelAAA(){
 			}
 			if (pxSets == true && PXaction == true){  //px set
 				if (colorForce_chance > 90){
-					r = 188;
-					g = 247;
-					b = 255;
+					r = 188;	g = 247;	b = 255;
 					ctx.fillStyle = fill;
 				}
-				var setLength = 5;
+				var setLength = 4;
 				var s_variance = Math.floor(Math.floor(Math.random() * 14) + 0);	
 				var gutter = 2;
 				var gutterSpace = Math.floor(Math.floor(Math.random() * 6) + 1);
 				var long_x = px_x[69];
 				var cluster_amt = Math.floor(Math.floor(Math.random() * 7) + 1);
 				var space_variance = Math.floor(Math.floor(Math.random() * 1640) + 0);  //for px set
-
 				var boxPos = Math.floor(Math.floor(Math.random() * 15) + 6);
 				var ww_chance = Math.floor(Math.floor(Math.random() * 100) + 0);  //left bias
 				if (ww_chance > 94 || ww_chance < 6){
@@ -463,10 +404,10 @@ function pixelAAA(){
 					}
 				}
 				if (j_ch == 64){
-					ctx.fillRect(px_xBottom[1090], 428, 46, 12);
+					ctx.fillRect(px_xBottom[1090], 428, 23, 1);
 				}
-				if (j_ch == 69){
-					ctx.fillRect(px_xBottom[1240], 428, 20, 10);
+				if (j_ch == 69 && globalCount < 300){
+					ctx.fillRect(px_xBottom[1240]-22, 428, 20, 10);
 					ctx.fillRect(px_x[575], px_y[575], 6, 1);
 				}
 
@@ -477,17 +418,16 @@ function pixelAAA(){
 				for (var aw = 0; aw < cluster_amt; aw++){  //cluster
 					var x_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
 					var reduce_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
-					var cl_distance = Math.floor(Math.floor(Math.random() * 20) + 3);
-					var w_Variance = Math.floor(Math.floor(Math.random() * 1) + 0);
+					var cl_distance = Math.floor(Math.floor(Math.random() * 26) + 4);
+					var w_Variance = Math.floor(Math.random());
 					var h_Variance = Math.floor(Math.floor(Math.random() * 3) + 1);
 					var cl_w = px_w+w_Variance;
 					var cl_h = px_h+h_Variance;
 					var nFill = "rgba (";
 					if (x_chance == 10 && reduce_chance == 10){
 						cl_h = 200;
-						ctx.clearRect(cl_x-(h_Variance*2), cl_y, 1, 16);
+						ctx.clearRect(cl_x-(h_Variance*2), cl_y, 1, 4);		ctx.fillRect(cl_x-(h_Variance*2), cl_y+5, 1, 2);	ctx.fillRect(cl_x-(h_Variance*2), cl_y+12, 2, 1);	ctx.fillRect(cl_x-(h_Variance*2), cl_y+18, 3, 1);
 					}
-					//ctx.fillStyle = fill;
 					ctx.fillRect(cl_x, cl_y, cl_w, cl_h);
 					px_h -= 1;
 					if (x_chance >= 50){
@@ -509,8 +449,7 @@ function pixelAAA(){
 						}
 					}
 					if (x_chance > 95 || x_chance < 5){  //more left bias because idk why 
-						cl_x -= 35;
-						cl_y -= 20;
+						cl_x -= 50;		cl_y -= 5;
 					}
 					//cluster gaps
 					var w_Variance = Math.floor(Math.floor(Math.random() * 3) + 1);
@@ -518,9 +457,9 @@ function pixelAAA(){
 						var h_Variance = Math.floor(Math.floor(Math.random() * 45) + 5);
 						ctx.clearRect(cl_x-38, cl_y-31, 1, 2);
 						ctx.clearRect(cl_x+60, cl_y+20, 1, 2);
-						ctx.clearRect(cl_x+2, cl_y-2, 1, cl_y-4);
+						ctx.clearRect(cl_x+2, cl_y-2, 1, 10);	ctx.fillRect(cl_x+2, cl_y+3, 1, 4);
 						if(reduce_chance < 3){
-							ctx.clearRect(cl_x+14, px_y[100], w_Variance, h_Variance);
+							ctx.clearRect(cl_x+14, px_y[100], w_Variance+1, h_Variance);
 						}
 					}
 					ctx.clearRect(cl_x-10, cl_y+6, 2, 1);
@@ -530,7 +469,7 @@ function pixelAAA(){
 					x_chance = Math.floor(Math.floor(Math.random() * 100) + 0);
 					var colorOffset1 = Math.floor(Math.floor(Math.random() * 136) + 54);
 					var colorOffset2 = Math.floor(Math.floor(Math.random() * 107) + 54);
-					var colorOffset3 = Math.floor(Math.floor(Math.random() * 90) + 54);
+					var colorOffset3 = Math.floor(Math.floor(Math.random() * 90) + 52);
 					if (r < 120 && g < 120){
 						if (x_chance >= 50){
 							r += colorOffset1;
@@ -546,9 +485,7 @@ function pixelAAA(){
 								g = 240;
 							}
 							if (x_chance > 94){  //rgba(42,182,254,1)
-								r = 42;
-								g = 182;
-								b = 254;
+								r = 42;		g = 182;	b = 254;
 							}
 						}
 					}
@@ -604,9 +541,7 @@ function pixelAAA(){
 					}
 				
 					var alphaN = 1;
-					nFill += r; nFill += ",";
-					nFill += g; nFill += ",";
-					nFill += b; nFill += ",";
+					nFill += r; nFill += ",";	nFill += g; nFill += ",";	nFill += b; nFill += ",";
 					nFill += alphaN; nFill += ")";
 					//console.log("N: " + nFill + " fill:" + fill);
 					ctx.fillStyle = nFill;
@@ -685,11 +620,10 @@ function pixelAAA(){
 	if (globalCount > 200){
 		waveFREQ = 40;
 	}
-	if (count > waveFREQ){  //wave
+	if (count > waveFREQ){  //hard wave
 		count = 0;
 		if (wvSwitch == true){
-			var wv_x = 0;
-			var wv_y = px_y[994];
+			var wv_x = 0;	var wv_y = px_y[994];
 			var wv_L = Math.floor(Math.floor(Math.random() * 34) + 2);
 			var wv_H = Math.floor(Math.floor(Math.random() * 26) + 1);
 			var stepAMT = Math.floor(Math.floor(Math.random() * 5) + 1);
@@ -698,16 +632,17 @@ function pixelAAA(){
 			var wvDirection = Math.floor(Math.floor(Math.random() * 100) + 0);
 			var wv_gutter = 0;
 			showColor.fillText("_           __                           -" + wv_y-60, px_x[670], px_x[670]); 
-			ctx.clearRect(px_x[1111], px_y[1111], clearW, 1);
+			ctx.clearRect(px_x[1111], px_y[1111], clearW, 1);	ctx.clearRect(px_x[1111], px_y[1111]-13, clearW, 1);
 			ctx.clearRect(px_x[1112], px_y[1111], 28, 1);
+			
+			console.log("Wave "+ wv_y);
 			while (wv_x < 3850) {
 				wv_H = Math.floor(Math.floor(Math.random() * 26) + 1);
 				if (wv_L > 20 && wv_H > 12){
 					wv_H -= 10;		wv_L += 2;
 				}
-				showColor.fillText("Active", 1190, 110); 
 				if (wvDirection > 85){
-					showColor.fillText("gutter", 230, 22); 
+					console.log("wv_gutter++");
 					wv_gutter++;
 					if (wv_gutter > 10){
 						wv_gutter = 0;
@@ -759,16 +694,15 @@ function pixelAAA(){
 	}
 	if (globalCount % 36 == 0 && PXaction == true){  //px pyramid 
 		console.log("pyramid check"); //showColor.fillText("amb CHECK", 230, 10); 
-		var amb_xShift = 30 + Math.floor(Math.floor(Math.random() * 16) + 6);
+		var amb_xShift = 28 + Math.floor(Math.floor(Math.random() * 16) + 6);
 		var amb_yShift = 12 + Math.floor(Math.floor(Math.random() * 14) + 1);
-		var ambX = px_x[1575];
+		var ambX = px_x[1575];		var ambY = px_y[1575]-60;
 		var ambStep = 2;
-		var ambY = px_y[1575]-60;
 		var ambH = Math.floor(Math.floor(Math.random() * 5) + 2);
-		var amb_L = Math.floor(Math.floor(Math.random() * 1150) + 520);
+		var amb_L = Math.floor(Math.floor(Math.random() * 1172) + 520);
 		var amb_gutter = Math.floor(Math.floor(Math.random() * 10) + 3);	
 		var ambEdge = px_x[1575]+amb_L;
-		var amb_amt = Math.floor(Math.floor(Math.random() * 706) + 330);	
+		var amb_amt = Math.floor(Math.floor(Math.random() * 726) + 330);	
 		for (var i = 0; i < amb_amt; i++){
 			//console.log("_x: " + ambX + " _y: " + ambY);
 			ctx.fillRect(ambX,ambY,1,ambH);
@@ -796,7 +730,6 @@ function pixelAAA(){
 		ctx.fillRect(px_x[1555],px_y[1555],1,1);	ctx.fillRect(px_x[1555]+2,px_y[1555]+1,1,1);
 		ctx.fillRect(px_x[1555]-2,px_y[1555]-1,1,1);	ctx.fillRect(px_x[1555]-100,px_y[1555]-2,1,1);
 		console.log("home, x: " + hm_x + " -- y: " + hm_y + " -- LN_amt: " + LN_amt);
-		
 		function hm_refreshVar(){
 			hmSIZE_var = Math.floor(Math.random() * 4) + 2;
 			hmPOS_var = Math.floor(Math.random() * 16) + 4;
@@ -812,7 +745,7 @@ function pixelAAA(){
 		function hm_clearLine(){
 			ctx.clearRect(hm_x-7,hm_y-5,1,2);
 			if(globalChance[50] > 70){
-				ctx.clearRect(hm_x-4,hm_y-clearStep,1,hm_clearH);
+				ctx.clearRect(hm_x-4,hm_y-clearStep,1,hm_clearH/2);  //big clearrect
 				clearStep += Math.floor(Math.random() * 47) + 11;
 			}
 		}
@@ -877,7 +810,7 @@ function pixelAAA(){
 			}
 		}
 	}
-	if (globalCount > 110 && globalCount % 10 == 0 && clrwvSwitch == true){  //spaced clear wwave
+	if (globalCount > 116 && globalCount % 10 == 0 && clrwvSwitch == true){  //spaced clear wwave
 		//ctx.fillRect(1,1,3500,420);
 		var spc_x = px_x[1772];		var spc_y = px_y[1772];
 		for (var i = 0; i < 7; i++){
@@ -912,7 +845,8 @@ function pixelAAA(){
 		var SS_step = Math.floor(Math.floor(Math.random() * 7) + 2);
 		var spc_H = Math.floor(Math.floor(Math.random() * 8) + 3);
 		var spc_count = 0;
-		while (spc_x > 2){
+		console.log("clr wv x: " + spc_x);
+		while (spc_x > 2){	//actual
 			spc_count++;
 			if(spc_direction >= 50){
 				spc_y -= SS_step;
@@ -920,7 +854,7 @@ function pixelAAA(){
 			else{
 				spc_y += SS_step;
 			}
-			ctx.clearRect(spc_x,spc_y,1,spc_H);		ctx.clearRect(spc_x+140,spc_y-140,1,spc_H);
+			ctx.clearRect(spc_x,spc_y,1,spc_H);		ctx.clearRect(spc_x+140,spc_y-140,1,spc_H);		ctx.clearRect(spc_x-160,spc_y+160,1,spc_H);
 			spc_x -= spc_gutter;
 			spc_direction = Math.floor(Math.floor(Math.random() * 100) + 1);
 			SS_step = Math.floor(Math.floor(Math.random() * 6) + 1);
@@ -970,7 +904,7 @@ function pixelAAA(){
 			}
 			var backChance = Math.floor(Math.floor(Math.random() * 100) + 1);
 			var backDir = Math.floor(Math.floor(Math.random() * 100) + 1);
-			if(spc_count % 10 == 0 && backChance < 8){
+			if(spc_count % 10 == 0 && backChance < 9){
 				console.log("back x= " + spc_x);
 				spc_x += 202;
 				if(backDir >= 50){
@@ -987,61 +921,173 @@ function pixelAAA(){
 			}
 		}
 	}
+	var splatFREQ = 2;		var sp_amtMAX = 5152;	var sp_rowLMAX = 288;
+	if (globalCount > 190){
+		splatFREQ = 10;		sp_amtMAX = 1210;		sp_rowLMAX = 166;
+	}
+	if (globalCount % splatFREQ == 0 && globalChance[646] > 55 && splatSwitch == true && PXaction == true){	// splat noise
+		var sp_x = px_x[1677];		var sp_y = px_y[1677];
+		var sp_amt = Math.floor(Math.floor(Math.random() * sp_amtMAX) + 512);
+		var sp_rowLength = Math.floor(Math.floor(Math.random() * sp_rowLMAX) + 16);
+		var sp_pool = [];
+		sp_pool[0] = [0,75,25,50,50,50,25,0,50,50,75,50,75,0,100,25,75,25,25,50,25,75];
+		sp_pool[1] = [25,50,50,50,25,50,50,50,100,50,50,75,50,75,0,75,25,75,25,75,100,0];
+		sp_pool[2] = [75,50,50,50,50,25,50,75,75,75,100,75,50,50,75,50,50,50,50,50,50,50];
+		sp_pool[3] = [25,50,50,50,25,75,50,50,100,75,50,100,75,75,75,50,75,50,25,75,25,75];
+		sp_pool[4] = [50,50,50,0,100,50,50,100,25,75,75,50,75,75,50,75,50,75,75,0,75,25];
+		sp_pool[5] = [75,50,25,100,25,50,100,0,75,50,25,25,50,25,50,50,50,50,25,50,50,50];
+		sp_pool[6] = [25,50,75,0,75,50,25,100,50,25,50,50,50,75,50,25,50,50,25,25,50,50];
+		sp_pool[7] = [75,25,25,75,0,75,75,50,75,100,25,75,100,50,75,75,75,25,50,25,25,100];
+		sp_pool[8] = [25,75,50,25,100,25,50,100,50,50,100,75,50,75,50,75,50,100,0,50,75,25];
+		sp_pool[9] = [50,50,50,75,25,75,75,0,75,75,50,50,75,50,50,75,50,25,75,50,25,100];
+		sp_pool[10] = [50,50,50,50,50,75,25,75,25,50,75,50,50,75,50,25,75,25,50,25,75,0];
+		sp_pool[11] = [50,25,50,25,100,25,100,0,75,50,25,75,50,50,75,75,0,75,0,50,25,50];
+		sp_pool[12] = [50,50,50,50,25,100,25,75,25,50,75,0,50,75,50,25,75,25,50,50,0,50];
+		sp_pool[13] = [25,50,0,75,25,25,50,75,25,75,0,50,25,25,50,75,25,25,75,0,100,25];
+		sp_pool[14] = [75,0,100,0,50,50,50,25,75,0,75,25,25,25,75,0,50,75,0,75,50,50];  
+		sp_pool[15] = [0,100,0,75,25,25,50,50,50,50,50,50,25,75,25,75,25,50,50,50,25,75];
+		sp_pool[16] = [75,25,75,25,25,75,25,75,50,50,25,75,50,50,50,50,75,50,50,0,75,0];
+		sp_pool[17] = [75,50,50,25,50,0,75,75,25,25,50,25,75,25,100,25,50,50,50,50,0,25];
+		sp_pool[18] = [25,50,50,25,25,75,25,25,100,0,50,50,50,100,25,50,50,50,25,50,25,50];
+		sp_pool[19] = [50,50,0,75,50,25,75,75,0,75,25,50,75,50,50,50,0,75,50,25,50,50,25];
+		sp_pool[20] = [25,25,100,25,75,100,25,25,100,25,25,75,25,50,50,25,50,0,75,50,25,25];
+		sp_pool[21] = [50,50,50,100,75,25,75,50,25,75,50,0,50,50,50,25,50,50,50,25,50,75];
+		sp_pool[22] = [0,100,50,50,50,100,0,50,50,25,50,50,50,25,75,75,25,75,25,75,50,25];
+ 		var spGrid_y = Math.floor(Math.random() * sp_pool.length);
+		var spGrid_x = Math.floor(Math.random() * sp_pool[0].length);
+		var sp_place = sp_pool[spGrid_y][spGrid_x];
+		ctx.fillRect(sp_x-100,sp_y,2,2);  //mark
+		var sp_drawChance = Math.floor(Math.floor(Math.random() * 100) + 1);
+		var sp_drawDir = Math.floor(Math.floor(Math.random() * 100) + 1);
+		var sp_stepDir = Math.floor(Math.floor(Math.random() * 100) + 1);
+		var sp_draw = 0;	var sp_neg = false;
+		var sp_lnShift = Math.floor(Math.floor(Math.random() * 100) + 1);
+		var sp_lnOffset = Math.floor(Math.floor(Math.random() * 336) + 150);
+		var sp_stepY = 0;
+		var sp_count = 0;
+		function negCheck(){
+			if (sp_neg == false){
+				sp_draw++;
+			}
+			else if (sp_neg == true){
+				sp_draw--;
+			}
+		}
+		while(sp_count < sp_amt){
+			if (sp_drawDir >= 50){
+				sp_draw = -1;
+				sp_neg == true;
+			}
+			for (var j = 0; j < sp_rowLength; j++){
+				if (sp_drawChance <= sp_place){
+					ctx.fillRect(sp_x+sp_draw,sp_y+sp_stepY,1,1);
+					//console.log("step: " + (sp_x+sp_draw));
+				}
+				spGrid_x++;
+				if (spGrid_x > 20){
+					spGrid_x = 0;	spGrid_y++;
+				}
+				if (spGrid_y > 24){
+					spGrid_y = 0;
+				}
+				negCheck();
+				sp_count++;
+				sp_drawChance = Math.floor(Math.floor(Math.random() * 100) + 1);  //refesh
+			}
+			//sp_draw = 0;
+			/*
+			if (sp_lnShift >= 50){
+				sp_x -= sp_lnOffset;
+			}
+			else if (sp_lnShift < 50){
+				sp_x += sp_lnOffset;
+			}*/
+			sp_lnOffset = Math.floor(Math.floor(Math.random() * 306) + 102);
+			sp_rowLength = Math.floor(Math.floor(Math.random() * 288) + 16);
+			console.log("nRow: " + sp_rowLength + " | x: " + sp_x + "/" +sp_draw);
+			var stepDirADD = Math.floor(Math.random() * 3);
+			if(sp_stepDir >= 50){
+				sp_stepY += 1;	sp_stepY += stepDirADD;
+			}
+			else if(sp_stepDir < 50){
+				sp_stepY -= 1;	sp_stepY -= stepDirADD;
+			}
+			stepDirADD = Math.floor(Math.random());
+		}
+		console.log("GRID:" + spGrid_x + "|" + spGrid_y + "_ amt:" + sp_amt);
+		console.log(sp_x + "," + sp_y)
+	}
+	if(globalCount > 1){	// spl noise rays
+		var nz_amt = Math.floor(Math.floor(Math.random() * 1166) + 366);
+		var nzPool = [];
+		nzPool[0] = [0,1,1,0,1,1,0,0,1,0,1,1,0,0,1,1,1,1,0,1,0,1,0,1,0,1,0,1,1,0,1,0,1,1,0,1,0,0,1,0,1,1,1,0,1,0,1,1,1,0];
+		nzPool[1] = [1,0,0,1,0,1,1,1,0,1,0,0,1,0,0,1,1,0,1,0,0,0,1,1,1,0,1,0,0,1,0,1,0,1,0,1,1,0,1,0,1,1,0,1,0,1,0,0,0,1];
+		nzPool[2] = [1,0,1,1,0,1,0,0,1,1,1,0,1,0,1,0,0,0,0,0,1,1,0,1,0,1,1,1,1,0,0,1,0,0,1,0,0,1,1,0,1,0,1,1,0,0,0,1,0,1];
+		nzPool[3] = [0,1,0,0,0,1,1,1,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,1,1,1,0,1,0,0,1,0,0,1,0,1,1,1,0,1,0,0,1,0,1,1];
+		nzPool[4] = [1,0,1,0,1,1,0,0,0,1,1,1,0,1,0,1,1,0,1,1,0,0,0,1,0,1,0,1,1,0,1,0,1,0,0,1,1,0,1,1,1,0,1,0,1,0,0,1,1,1];
+		var poolSelect = Math.floor(Math.random() * nzPool.length);
+		var nz_xShift = 1;		var nz_xOffset = Math.floor(Math.floor(Math.random() * 156) + -156);
+		var nz_negCh = Math.round(Math.random());
+		if (nz_negCh == 1){
+			nz_xOffset *= -1;
+		}
+		//console.log("shift: " + nz_xShift + "_ NEG: " + nz_negCh);
+		var nz_x = px_x[54]+nz_xShift;	var nz_y = 420;		//console.log("x: " + nz_x);
+		while (nz_y > 0){
+			nz_x += nz_xOffset;  //console.log(nz_x);
+			ctx.fillRect(nz_x,nz_y,1,1);
+			nz_xOffset = Math.floor(Math.floor(Math.random() * 42) + -42);  //refresh
+			nz_negCh = Math.round(Math.random());  //refresh
+			nz_y -= Math.floor(Math.floor(Math.random() * 3) + 1)
+			if (nz_x > c.width){
+				nz_x = 0;
+			}
+			else if (nz_x < 0){
+				nz_x = 3840;
+			}
+		}
+	}
 }
 
-function clear(){  //clear px -- doesn't run wtf 
-	var CLRsmall_w = [];	var CLRbig_w = [];
-	var CLR_x = [];		var CLR_y = [];
-	var clr_chance = Math.floor(Math.floor(Math.random() * 200) + 0);
-
-	for (var ji = 0; ji < 1000; ji++){
-		CLRsmall_w[i] = Math.floor(Math.floor(Math.random() * 20) + 1);
-		CLRbig_w[i] = Math.floor(Math.floor(Math.random() * 264) + 40);
-		CLR_x[i] = Math.floor(Math.floor(Math.random() * canvas.length) + 0);
-		CLR_y[i] = Math.floor(Math.floor(Math.random() * canvas.height) + 0);
-	}
-	ctx.clearRect(CLR_x[120], CLR_y[120], 1, 3);
-	ctx.fillRect(100, 100, 2500,300);
-	ctx.clearRect(50, 200, 2000, 300);
-	console.log("WWWWWWWWWWWWWWWWWWWWWW")
+function reset(){
+	count = 0;		globalCount = 0;
+	ctx.clearRect(0,0,c.width,c.height);	showColor.clearRect(0,0,cola.width,cola.height);	
+	console.log("~~~  CANVAS RESET ~~~");		
 }
 function saveIMG(){  //todo
 	var cvsData = canvas.toDataURL();
 }
 //DL.addEventListener('click', saveIMG, )
 function wvToggle(){
-	wvSwitch = !wvSwitch;
-	wvDisplay();
+	wvSwitch = !wvSwitch;		wvDisplay();
 }
 function wvDisplay(){
 	showColor.fillStyle = "rgba(255,255,20,1)";
-	showColor.fillRect(3, 15, 76, 10);
+	showColor.fillRect(2, 15, 74, 10);
 	showColor.fillStyle = "rgba(0,0,0,1)";
 	if (wvSwitch == true){
-		showColor.fillText("Wave TRUE", 5, 24); 
+		showColor.fillText("Wave TRUE",4, 24); 
 	}
 	else if (wvSwitch == false){
-		showColor.fillText("Wave FALSE", 5, 24); 
+		showColor.fillText("Wave FALSE",4, 24); 
 	}
 }
 function ClrwvToggle(){
-	clrwvSwitch = !clrwvSwitch;
-	clrwvDisplay();
+	clrwvSwitch = !clrwvSwitch;		clrwvDisplay();
 }
 function clrwvDisplay(){
 	showColor.fillStyle = "rgba(245,245,170,1)";
-	showColor.fillRect(81, 15, 74, 10);
+	showColor.fillRect(157, 3, 74, 10);
 	showColor.fillStyle = "rgba(0,0,0,1)";
 	if (clrwvSwitch == true){
-		showColor.fillText("clWV TRUE", 82, 24); 
+		showColor.fillText("clWV TRUE",152,3); 
 	}
 	else if (clrwvSwitch == false){
-		showColor.fillText("clWV FALSE", 82, 24); 
+		showColor.fillText("clWV FALSE",152,3); 
 	}
 }
 function grdToggle(){
-	top_grad = !top_grad;
-	grdDisplay();
+	top_grad = !top_grad;	grdDisplay();
 }
 function grdDisplay(){
 	showColor.fillStyle = "rgba(240,170,255,1)";
@@ -1054,21 +1100,34 @@ function grdDisplay(){
 		showColor.fillText("grad FALSE", 160, 24); 
 	}
 }
+function splatToggle(){
+	splatSwitch = !splatSwitch;		splatDisplay();
+}
+function splatDisplay(){
+	showColor.fillStyle = "rgba(120,245,150,1)";
+	showColor.fillRect(80, 15, 74, 10);
+	showColor.fillStyle = "rgba(0,0,0,1)";
+	if (splatSwitch == true){
+		showColor.fillText("splt TRUE",82,24); 
+	}
+	else if (splatSwitch == false){
+		showColor.fillText("splt FALSE",82,24); 
+	}
+}
 function pixelz(){
 	timesRun = 1;
 	amt = 70;
 	pixelAAA();
-	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();
+	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();		splatDisplay();
 }
 function pixelz3(){
 	timesRun = 3;
 	amt = 76;
 	pixelAAA();
-	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();
+	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();		splatDisplay();
 }
 function scatterToggle(){
-	scatterSwitch = !scatterSwitch;
-	scttDisplay();
+	scatterSwitch = !scatterSwitch;		scttDisplay();
 }
 function scttDisplay(){
 	showColor.fillStyle = "rgba(90,170,255,1)";
@@ -1082,8 +1141,7 @@ function scttDisplay(){
 	}
 }
 function pxSetsToggle(){
-	pxSets = !pxSets;
-	pxSetDisplay();
+	pxSets = !pxSets;		pxSetDisplay();
 }
 function pxSetDisplay(){
 	showColor.fillStyle = "rgba(255,110,110,1)";
@@ -1101,13 +1159,13 @@ function pxSETS(){  //set of blocks
 	timesRun = 1;
 	amt = 14;
 	pixelAAA();
-	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();
+	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();		splatDisplay();
 }
 function pxSETS3(){
 	timesRun = 3;
 	amt = 14;
 	pixelAAA();
-	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();
+	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();		splatDisplay();
 }
 function bunch(){
 	timesRun = 4;
@@ -1121,6 +1179,7 @@ function bunch(){
 		amt = 138;
 		pixelAAA();
 	}
-	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();
+	wvDisplay();  grdDisplay();		clrwvDisplay();		scttDisplay();		pxSetDisplay();		splatDisplay();
+	console.log(">> globalCount: " + globalCount);
 }
 </script><br></body></html>
