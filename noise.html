@@ -9,10 +9,9 @@
 <input type="submit" value="setss" onclick="pxSetsToggle()" />
 <input type="submit" value="splat" onclick="splatToggle()" />
 
-|| <input type="submit" value="RESET" onclick="reset()" />
 <br><input type="submit" value="Run px Sets [1]" onclick="pxSETS()" />
 <input type="submit" value="[3]" onclick="pxSETS3()" />
-# <input type="submit" value="Fill" onclick="bunch()" /> , <input type="submit" value="{test}" onclick="counterUp()" />
+# <input type="submit" value="Fill" onclick="bunch()" /> , <input type="submit" value="{test}" onclick="counterUp()" /> || <input type="submit" value="RESET" onclick="reset()" />
 
 </div>
 <br> <canvas id="COLORDISPLAY" width="3840" height="440" style="border:1px solid #ff0ffe"></canvas>
@@ -810,7 +809,7 @@ function pixelAAA(){
 			}
 		}
 	}
-	if (globalCount > 116 && globalCount % 10 == 0 && clrwvSwitch == true){  //spaced clear wwave
+	if (globalCount > 116 && globalCount % 10 == 0 && clrwvSwitch == true && PXaction == true){  //spaced clear wwave
 		//ctx.fillRect(1,1,3500,420);
 		var spc_x = px_x[1772];		var spc_y = px_y[1772];
 		for (var i = 0; i < 7; i++){
@@ -1017,33 +1016,84 @@ function pixelAAA(){
 		console.log("GRID:" + spGrid_x + "|" + spGrid_y + "_ amt:" + sp_amt);
 		console.log(sp_x + "," + sp_y)
 	}
-	if(globalCount > 1){	// spl noise rays
-		var nz_amt = Math.floor(Math.floor(Math.random() * 1166) + 366);
-		var nzPool = [];
-		nzPool[0] = [0,1,1,0,1,1,0,0,1,0,1,1,0,0,1,1,1,1,0,1,0,1,0,1,0,1,0,1,1,0,1,0,1,1,0,1,0,0,1,0,1,1,1,0,1,0,1,1,1,0];
-		nzPool[1] = [1,0,0,1,0,1,1,1,0,1,0,0,1,0,0,1,1,0,1,0,0,0,1,1,1,0,1,0,0,1,0,1,0,1,0,1,1,0,1,0,1,1,0,1,0,1,0,0,0,1];
-		nzPool[2] = [1,0,1,1,0,1,0,0,1,1,1,0,1,0,1,0,0,0,0,0,1,1,0,1,0,1,1,1,1,0,0,1,0,0,1,0,0,1,1,0,1,0,1,1,0,0,0,1,0,1];
-		nzPool[3] = [0,1,0,0,0,1,1,1,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,1,1,1,0,1,0,0,1,0,0,1,0,1,1,1,0,1,0,0,1,0,1,1];
-		nzPool[4] = [1,0,1,0,1,1,0,0,0,1,1,1,0,1,0,1,1,0,1,1,0,0,0,1,0,1,0,1,1,0,1,0,1,0,0,1,1,0,1,1,1,0,1,0,1,0,0,1,1,1];
-		var poolSelect = Math.floor(Math.random() * nzPool.length);
+	if(globalCount > 0){	// spl noise rays globalCount % 8 && globalChance[77] > 50 && PXaction == true
+		var nz_amt = Math.floor(Math.floor(Math.random() * 2000);
+		var nz_lineAMT = Math.floor(Math.floor(Math.random() * 88) + 8);
+		var nzPool = [];  //55
+		nzPool[0] = [0,1,1,1,0,0,1,1,1,0,0,1,0,1,1,0,0,1,1,1,1,0,1,0,0,1,0,1,0,1,0,1,1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,1,1,0];
+		nzPool[1] = [1,0,0,1,0,1,1,1,1,0,1,0,0,1,0,0,1,1,0,1,0,1,0,1,0,0,1,1,1,0,1,0,0,1,0,0,1,0,1,0,1,1,0,1,0,1,1,0,1,0,1,0,0,0,1];
+		nzPool[2] = [1,0,1,1,0,1,1,0,0,1,1,1,0,0,1,0,1,0,0,0,0,0,1,1,1,1,0,1,0,1,1,1,1,0,0,1,1,0,0,1,0,0,1,1,0,1,0,1,1,0,0,0,1,0,1];
+		nzPool[3] = [0,1,0,0,0,1,1,1,1,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,1,0,1,1,0,1,1,0,1,0,0,1,0,0,1,0,1,1,1,0,1,0,0,1,0,1,1];
+		nzPool[4] = [1,0,1,0,1,1,0,0,1,1,0,1,1,1,0,1,0,1,1,0,1,1,0,0,0,1,0,1,1,0,1,1,0,1,0,1,0,0,1,1,0,1,0,1,1,1,0,1,0,1,0,0,1,1,1];
+		nzPool[5] = [1,0,0,0,1,0,0,1,1,1,1,0,1,0,0,0,1,1,1,0,1,1,0,0,1,0,1,1,0,1,0,1,0,1,0,1,0,0,0,0,1,0,1,1,0,1,0,1,1,1,1,1,1,0,1];
+		nzPool[6] = [1,1,0,0,1,0,1,1,0,0,1,1,0,1,1,1,0,1,0,0,0,1,1,0,1,0,1,0,1,1,1,1,1,0,1,1,0,1,0,0,1,1,1,0,1,0,1,1,1,1,0,1,0,0,1];
+		nzPool[7] = [0,0,1,0,0,0,1,1,0,1,0,1,0,1,0,1,1,0,0,0,1,0,1,0,1,1,1,1,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,1,0,0,1,1,1,0,1,0,1,1];
+		var nz_poolSelect1 = Math.floor(Math.random() * nzPool.length);		var nz_poolIndex1 = Math.floor(Math.random() * nzPool[0].length);
+		var nz_poolSelect2 = Math.floor(Math.random() * nzPool.length);		var nz_poolIndex2 = Math.floor(Math.random() * nzPool[0].length);
+		var nx_poolSelect = Math.floor(Math.random() * nzPool.length);		var nx_poolIndex = Math.floor(Math.random() * nzPool[0].length);
+		var nz_spot1 = nzPool[nz_poolSelect1][nz_poolIndex1];
+		var nz_spot2 = nzPool[nz_poolSelect2][nz_poolIndex2];
+		var nx_spot = nzPool[nx_poolSelect][nx_poolIndex]
+		var nx_xShift = Math.floor(Math.floor(Math.random() * 4) + 1);
 		var nz_xShift = 1;		var nz_xOffset = Math.floor(Math.floor(Math.random() * 156) + -156);
 		var nz_negCh = Math.round(Math.random());
 		if (nz_negCh == 1){
 			nz_xOffset *= -1;
 		}
+		/*var nx_x = px[55];	nx_y = 470;
+		var nxCount = 0;
+		for (nxCount > nz_amt){
+			for (var i = 0; i > nz_lineAMT; i++){
+				if (nx_spot == 1){
+					fillRect(nx_x,nx_y,4,4);
+					nx_x -= nx_xShift;
+					i++;
+				}
+				
+			}
+		}*/
 		//console.log("shift: " + nz_xShift + "_ NEG: " + nz_negCh);
-		var nz_x = px_x[54]+nz_xShift;	var nz_y = 420;		//console.log("x: " + nz_x);
-		while (nz_y > 0){
+		var nz_x = px_x[54]+nz_xShift;	var nz_y = 450;		//console.log("x: " + nz_x);
+		var x1_max = 182;	var x1_min = 74;
+		var x2_max = 716;	var x2_min = 208;
+		while (nz_y > -30){
 			nz_x += nz_xOffset;  //console.log(nz_x);
-			ctx.fillRect(nz_x,nz_y,1,1);
-			nz_xOffset = Math.floor(Math.floor(Math.random() * 42) + -42);  //refresh
+			ctx.fillRect(nz_x,nz_y,2,1);
+			//console.log("[1]pool: " + nz_poolSelect1 + " , place: " + nz_poolIndex1 + " , sp: " + nz_spot1);
+			//console.log("[2]pool: " + nz_poolSelect2 + " , place: " + nz_poolIndex2 + " , sp: " + nz_spot2);
+			if (nz_poolIndex1 > nzPool[0].length){
+				nz_poolIndex1 = 0;
+			}
+			if (nz_poolIndex2 > nzPool[0].length){
+				nz_poolIndex2 = 0;
+			}
+			if (nz_spot1 == 1){
+				var off_x1 = nz_x-Math.floor(Math.floor(Math.random() * x1_max) + x1_min)
+				if (off_x1 < 0){
+					off_x1 = 3850;
+				}
+				var xMid = (off_x1+off_x2)/2;
+				ctx.fillRect(xMid,nz_y-32,1,1);
+				ctx.fillRect(off_x1,nz_y+5,1,1);
+				x1_max -= 6;	x1_min -= 2;
+			}
+			if (nz_spot2 == 1){
+				var off_x2 = nz_x-Math.floor(Math.floor(Math.random() * x2_max) + x2_min)
+				if (off_x2 < 0){
+					off_x2 = 3870;
+				}
+				ctx.fillRect(off_x2,nz_y+8,1,1);
+				x2_max -= 20;	x2_min -= 5;
+			}
+			nz_poolIndex1++;	nz_poolIndex2++;
+			nz_xOffset = Math.floor(Math.floor(Math.random() * 32) + -32);  //refresh
 			nz_negCh = Math.round(Math.random());  //refresh
-			nz_y -= Math.floor(Math.floor(Math.random() * 3) + 1)
+			nz_y -= Math.floor(Math.floor(Math.random() * 13) + 1)
 			if (nz_x > c.width){
 				nz_x = 0;
 			}
 			else if (nz_x < 0){
-				nz_x = 3840;
+				nz_x = 3870;
 			}
 		}
 	}
