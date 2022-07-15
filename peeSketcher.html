@@ -1,0 +1,377 @@
+<!DOCtype html><html>
+<head><title>pee Sk</title></head>
+<body>
+<style>
+    body {
+        background-color: rgb(50,50,50);
+        color:rgb(210, 210, 210)
+    }
+    table, td {
+        border: 0px solid rgb(100,100,100);
+    }
+    thead, tfoot {
+        background-color: rgb(15, 15, 15);
+        color: rgb(150, 230, 150);
+    }
+</style>
+<table>
+    <thead>
+        <tr><th colspan='1'>Controls &nbsp; &nbsp;</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <div id="Inputs">
+                    <br>PX Size <input type="range" min="1" max="10" value="1" class="slider" id="sliderSize">
+                    <span id="sliderSizeOutput"></span>
+                    <br>Loop Count <input type="range" min="5" max="600" value="200" class="slider" id="sliderCount">
+                    <span id="sliderCountOutput"></span>
+                    <br>patt1 <input type="range" min="1" max="7" value="1" class="slider" id="patt1">
+                    <span id="patt1Output"></span>
+                    <br>patt2 <input type="range" min="1" max="7" value="1" class="slider" id="patt2">
+                    <span id="patt2Output"></span>
+                    <br>s2 <input type="range" min="2" max="8" value="4" class="slider" id="slider2">
+                    <span id="slider2Output"></span>
+                    <br>FF <input type="range" min="1" max="3" value="2" class="slider" id="sliderF">
+                    <span id="sliderFOutput"></span>
+
+                    <form action="put function here">
+                        <label for="favcolor">AA</label>
+                        <input type="color" id="favcolor" name="favcolor" value="#000000"> 
+                        <input type="submit" value="Submit">
+                    </form>
+
+                    <br>Canvas W <input type="range" min="640" max="3840" value="640" step="320" class="slider_cw" id="sliderCW">
+                    <span id="sliderCW_output"></span>
+                    <br>Canvas H <input type="range" min="360" max="2160" value="360" step="180" class="slider_ch" id="sliderCH">
+                    <span id="sliderCH_output"></span>
+                    <br><input type="submit" value="Run" onclick="draw_MAIN()"/>
+                    <hr><input type="submit" value="Reset" onclick="clearCanv()" />
+                    <input type="submit" value="TEST" onclick="test()" />
+            </div>
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td><canvas id='CANVAS' width='640' height='360' style='border:1px solid rgb(60,60,70)'></canvas></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+
+<script language="Javascript" type="text/javascript">//-------------------------------------------
+var c = document.getElementById ("CANVAS");		var ctx = c.getContext("2d");
+
+//~~~ SLIDERS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+var sliderFget = document.getElementById("sliderF");
+var sliderFoutGet = document.getElementById("sliderFOutput");
+var sliderF_set = sliderFget.value;
+sliderFoutGet.innerHTML = sliderFget.value;
+sliderFget.oninput = function(){
+    sliderFoutGet.innerHTML = this.value;
+    sliderF_set = sliderFget.value;
+}
+
+var patt1_get = document.getElementById("patt1"); //slider output
+var patt1out_get = document.getElementById("patt1Output"); //slider output display
+var patt1_set = patt1_get.value;
+patt1out_get.innerHTML = patt1_get.value;
+patt1_get.oninput = function(){
+    patt1out_get.innerHTML = this.value;
+    patt1_set = patt1_get.value;
+}
+patt1_get.onmouseup = function(){
+    console.log("patt1: " + patt1_get.value);
+    whichPatt = patt1_get.value;
+}
+
+var patt2_get = document.getElementById("patt2"); //slider output
+var patt2out_get = document.getElementById("patt2Output"); //slider output display
+var patt2_set = patt2_get.value;
+patt2out_get.innerHTML = patt2_get.value;
+patt2_get.oninput = function(){
+    patt2out_get.innerHTML = this.value;
+    patt2_set = patt2_get.value;
+}
+patt2_get.onmouseup = function(){
+    console.log("patt2: " + patt2_get.value);
+    whichPatt = patt2_get.value;
+}
+
+var sliderCount = document.getElementById("sliderCount");
+var sliderCountoutGet = document.getElementById("sliderCountOutput");
+var sliderCount_set = sliderCount.value;
+sliderCountoutGet.innerHTML = sliderCount.value;
+sliderCount.oninput = function(){
+    sliderCountoutGet.innerHTML = this.value;
+    sliderCount_set = sliderCount.value;
+}
+
+var slider2get = document.getElementById("slider2");
+var slider2outGet = document.getElementById("slider2Output");
+var slider2_set = slider2get.value;
+slider2outGet.innerHTML = slider2get.value;
+slider2get.oninput = function(){
+    slider2outGet.innerHTML = this.value;
+    slider2_set = slider2get.value;
+}
+
+var sliderSizeget = document.getElementById("sliderSize");
+var sliderSizeoutGet = document.getElementById("sliderSizeOutput");
+sliderSizeoutGet.innerHTML = sliderSizeget.value;
+sliderSizeget.oninput = function(){
+    sliderSizeoutGet.innerHTML = this.value;
+    sliderSize_set = sliderSizeget.value;
+}
+sliderSizeget.onmouseup = function(){
+    pxSize = sliderSizeget.value;
+    console.log("px size: " + pxSize);
+}
+
+var sliderCW_get = document.getElementById("sliderCW");
+var sliderCW_outGet = document.getElementById("sliderCW_output");
+var sliderCH_get = document.getElementById("sliderCH");
+var sliderCH_outGet = document.getElementById("sliderCH_output");
+
+sliderCW_outGet.innerHTML = sliderCW_get.value;
+sliderCH_outGet.innerHTML = sliderCH_get.value;
+
+sliderCW_get.oninput = function(){
+    var get_ratioW = this.value / 16;
+    var get_h = 9 * get_ratioW;
+    sliderCW_outGet.innerHTML = "<b>" + this.value + "</b> / <i>" + get_h + "</i>";
+    CANVAS.width = this.value;
+}
+sliderCH_get.oninput = function(){
+    var get_ratioH = this.value / 9;
+    var get_w = 16 * get_ratioH;
+    sliderCH_outGet.innerHTML = "<i>" + get_w + "</i> / <b>" + this.value + "</b>";
+    CANVAS.height = this.value;
+}
+
+// ~~~ DRAW ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+var px_x = [];		var px_y = [];
+var pxM = [];
+var rgb_value = [];
+var rando = [];
+var variation_a = [];
+var variation_a_amt = 1;
+function resetRandos(){
+    for (var i = 0; i < 1000; i++){
+        px_x[i] = Math.round(Math.round(Math.random() * c.width) + 1);
+        px_y[i] = Math.round(Math.round(Math.random() * c.height) + 1);
+        pxM[i] = Math.round(Math.round(Math.random() * 1000) + 1);
+        rgb_value[i] = Math.ceil(Math.ceil(Math.random() * 255) + 0);
+        rando[i] = Math.floor(Math.floor(Math.random() * 100) + 0);
+        variation_a[i] = Math.round(Math.round(Math.random() * variation_a_amt) + 0);
+    }
+}
+var patty01 = [5,1,3,1,1,3,5,1,1,6,4,1,2,6,2,3,3,6,2,1,5,6,6,4,5,1,4,4,4,4,1,5,2,3,6,6,2,6,1,5,3,5,4,4,2,2,5,1,1,2,1,4,4,5,2,5,2,4,3,4,2,1,1,1,5,4,4,5,6,6,2,3,1,5,3,6,2,6,2,4,6,1,6,4,6,1,6,2,4,1,5,4,4,1,2,3,2,4,2,2,4,1,2,6,5,1,3,1,6,2,3,5,1,4,5,1,2,3,1,2,3,4,1,6,6,2,5,3,4,5,6,2,6,4,2,2,1,3,3,1,5,4,4,5,6,5,1,4,3,1,3,1,3,6,3,4,3,2,4,5,1,5,5,6,1,5,2,6,6,1,4,3,1,6,1,5,5,1,3,4,3,6,5,1,1,6,4,2,4,4,6,6,1,2,1,6,4,3,1,2,6,4,4,1,1,1,2,5,5,2,1,2,2,4,5,3,3,6,6,1,1,1,4,3,3,6,3,4,3,4,4,6,1,2,4,3,4,5,4,4,5,5,6,6,1,51,4,5,5,2,2,2,5,6,3,5,6,3,3,1,5,3,5,4,1,4,1,6,2,5,5,3,6,4,3,5,2,2,5,1,2,4,3,4,2,6,3,1,4,3,4,4,1,3,1,4,4,1,4,1,6,6,5,5,4,2,4,5,5,4,5,5,6,4,3,6,3,6,4,6,3,4,2,1,6,6,2,2,6,1,2,6,2,4,6,2,2,3,4,2,5,1,5,1,5,6,1,1,5,4,3,5,6,6,5,1,6,4,3,3,6,5,1,4,6,6,1,3,5,2,3,6,1,3,6,4,3,6,6,3,1,3,6,3,4,6,2,3,1,1,4,3,4,4,2,3,5,4,4,1,6,6,2,2,2,6,3,1,1,3,2,5,3,5,5,3,6,6,2,2,4,3,1,3,1,6,2,6,2,2,3,4,4,5,5,5,2,4,4,4,3,6,5,5,4,5,4,2,5,3,4,5,6,2,5,1,5,3,4,5,1,2,2,5,6,4,5,5,4,1,6,2,5,4,2,1,2,1,2,4,3,3,2,4,6,2,6,3,3,5,2,3,6,1,4,3,2,4,1,4,6,5,3,2,6,6,6,1,4,2,5,2,1,1,3,1,1,3,5,5,1,4,4,4,5,4,5,4,5,1,1,3,3,3,3,1,2,4,5]; //6dice
+var patty02 = [7,12,7,14,3,15,9,6,23,5,7,22,3,5,8,13,14,9,12,4,10,4,6,4,14,12,10,4,6,4,8,8,2,10,8,17,2,3,9,1,7,2,21,7,23,9,4,20,7,7,18,10,5,15,11,9,22,1,4,18,11,5,20,6,9,14,5,4,9,2,3,15,14,10,14,4,7,7,12,16,8,6,5,17,3,5,5,20,3,15,12,0,6,2,8,2,21,12,18,0,8,16,11,7,21,8,7,33,3,8,10,8,8,16,4,6,11,9,5,11,13,6,8,7,10,19,9,9,18,13,2,10,17,4,13,2,7,25,5,4,19,7,6,16,2,10,8,2,8,3,10,8,14,2,5,7,11,4,8,6,5,23,9,10,11,8,2,10,6,12,13,10,2,6,6,5,3,6,2,8,2,9,3,3,10,15,2,6,14,2,8,7,11,8,9,0,5,0,8,12,18,7,3,12,6,6,20,18,5,12,11,11,16,3,1,11,5,4,15,17,13,8,4,1,11,6,5,11,5,10,8,1,10,7,16,11,22,19,12,5,10,1,17,12,11,21,8,9,28,8,11,7,10,4,15,6,0,12,18,12,24,18,10,12,0,5,4,26,7,12,6,5,18,7,1,12,8,9,39,4,7,6,3,1,10,6,7,17,19,7,16,4,5,6,13,6,15,16,9,13]; //pal rank s5 kda
+var patty03 = [9,8,2,11,2,11,3,10,6,9,4,14,3,12,3,14,3,14,4,14,5,12,6,11,6,13,9,18,6,13,11,16,9,12,6,15,6,12,2,17,6,15,9,12,7,12,1,16,5,12,10,16,5,16,5,16,8,16,6,16,1,14,11,16,6,18,6,13,10,18,6,13,6,14,12,14,6,11,6,14,1,13,9,15,10,18,6,13,5,14,12,18,6,13,4,17,12,16,7,17,12,13,10,11,12,13,7,17,11,16,1,13,7,15,11,14,12,12,10,14,9,11,9,9,6,13,9,18,12,12,1,13,6,16,3,14,5,14,]; //metrocrd month year
+var patty04 = [12,1,7,19,3,39,30,13,14,25,2,2,82,16,4,2,11,20,1,12,2,13,10,6,65,2,2,30,15,4,1,39,16,10,86,4,21,6,14,10,8,8,10,7,23,54,90,9,14,35,1,79,3,1,22,1,79,2,17,89,3,32,72,6,40,41,5,23,59,4,10,47,7,15,53,75,15,53,2,13,23,1,78,6,8,84,7,2,26,6,21,19,4,28,94,16,16,61,1,10,4,5,31,2,19,96,79,71,3,5,18,4,4,89,2,3,13,10,9,10,8,72,13,10,7,97,10,8,1,72,1,62,74,69,10,13,67,67,27,2,1,19,57,5,86,68,97,1,1,33,2,5,64,89,19,8,2,22,4,5,15,75,36,26,56,2,78,6,3,69,5,4,21,88,2,27,6,25,36,4,49,67,11,60,5,2,91,61,12,21,43,11,22,7,15,17,65,8,10,84,68,9,3,36,8,2,14,2,33,14,2,54,2,13,32,8,26,10,17,11,8,14,19,88,1,10,17,5,85,7,21,70,3,2,87,5,3,22,49,27,37,9,20,2,62,3,3,55,62,15,73,36,58,10,8,7,26,6,39,6,20,9,17,7,23,6,22,6,57,75,4,12,41,2,20,5,5,20,8,3,13,8,1,18,2,22,6,23,6,1,20,9,39,6,17,7,22,8,52,3,34,2,68,13,5,1,19,25,7,26,78,5,22,1,90,29,33,14,2,44,4,7,46,4,39,33,5,1,28,9,2,19,82,23,7,23,89,14,20,2,11,1,63,54,19,98,85,9,42,9,98,86,51,15,18,25,4,23,19,54,8,30,6,15,10,94,90,14,55,9,70,32,78,2,10,3,14,5,10,52,7,12,65,10,46,84,4,97,6,1,77,6,46,2,45,6,1,43,5,7,52,1,9,52,1,88,97,55,2,10,19,2,55,43,9,10,1,10,28,12,97,67,8,25,65,28]; //sc numbers
+var patty05 = [4403,3753,7017,3175,6215,1545,5282,2531,4949,7179,1397,5204,4006,3735,4485,4997,1255,2258,9500,4522,8664,3842,5235,2095,1305,9035,8644,8143,5795,4312,5524,3244,5278,6303,9366,5171,2750,3268,1330,1553,7449,5910,4185,1194,7751,9141,8545,7524,9416,2300,4994,1735,8070,1949,5433,4338,2857,6867]; //lics plates
+var patty06 = [67,-121,73,-130,36,107,-91,224,-80,-103,-592,-147,203,-230,-155,31,-226,-185,295,27,72,70,-119,28,-92,187,-101,-186,45,67,-161,-193,-247,51,20,22,58,-96,65,94,295,-129,109,32,39,730,-213,110,51,86,106,162,-202,106,578,-47,173,87,26,25,-55,23,-32,-66,34,-32,-120,-76,30,23,109,-60,9,19,-32,-202,-223,203,61,-151,-217,79,-142,90,164,66,-80,45,50,-94,109,53,122,-23,-23,-25,-40,19,18,6,-55,33,-65,19,23,-33,10,-81,25,33,-41,-241,-120,104,-93,-150,170,-113,-182,96,-120,118,-215,-517,63,-191,82,92,-153,120,330,-167,-146,132,-313,-133,160,271,-158,116,-131,98,251,36,98,64,-150,67,-166,-374,-220,-110,74,-290,-156,27,37,15,-168,-101,129,-341,124,-146,68,114,-207,71,65,-259,553,-139,181,-148,-348,165,227,213,-169,-188,-705,489,553,-159,-230,]; //fftb ernings div 21 rnded
+var patty07 = [112,34,7,380,165,50,2,114,70,6,177,75,2,145,56,6,194,80,3,135,56,8,187,70,3,101,95,9,121,94,8,177,70,2,128,81,4,148,57,3,136,46,7,184,55,3,125,40,6,168,26,7,114,15,7,169,80,3,150,70,9,170,20,1,112,64,7,101,20,7,133,38,4,190,48,5,170,32,5,161,43,9,152,61,5,161,70,7,108,59,6,135,56,7,199,59,6,178,50,6,180,24,7,156,58,1,141,49,3,151,63,6,188,40,1,171,51,9,162,28,8,133,80,4,138,71,5,151,69,7,129,25,4,144,81,6,151,91,4,146,60,7,192,26,8,184,76,5,159,81,2,148,33,6,176,67,3,161,59,4,188,37,5,148,55,6,161,48,9,135,68,7,140,20,7,155,81,9,123,34,1,184,51,6,168,76,4,184,77,5,160,13,4,124,50,9,165,35,7,118,49,6,161,63,9,121,42,5,166,77,8,154,49,2,164,72,4,166,98,3,116,57,9,131,67,9,142,51,7,181,66,5,180,59,6,171,48,7,112,54,8,199,51,3,125,27,7,135,38,9,148,66,9,184,26,3,108,57,6,180,38,9,183,80,4,164,57,9,190,77,3,158,50,7,146,56,5,133,70,8,161,57,1,177,27,1,181,70,3,126,31,1,142,44,1,177,62,1,180,57,6,335,135,40,7]; //input
+var pattytt = [1,1,1,1];
+var krabby01 = []; //container for patt select
+var krabby02 = [];
+var pxSize = sliderSizeget.value;
+var whichPatt;
+function draw_MAIN(){
+    var pxx_c; var pxy_c; //px_x/y container
+    pxSize = sliderSizeget.value;
+    resetRandos();
+    var k = 0;
+    function applyPatt(){
+        if (whichPatt == 1){
+            for (var i = 0; i < patty01.length; i++){
+                krabby01[k] = patty01[k];
+                k++;
+            }
+            k = 0;
+        }
+        else if (whichPatt == 2){
+            for (var i = 0; i < patty02.length; i++){
+                krabby01[k] = patty02[k];
+                k++;
+            }
+            k = 0;
+        }
+        else if (whichPatt == 3){
+            for (var i = 0; i < patty03.length; i++){
+                krabby01[k] = patty03[k];
+                k++;
+            }
+            k = 0;
+        }
+        else if (whichPatt == 4){
+            for (var i = 0; i < patty04.length; i++){
+                krabby01[k] = patty04[k];
+                k++;
+            }
+            k = 0;
+        }
+        else if (whichPatt == 5){
+            for (var i = 0; i < patty05.length; i++){
+                krabby01[k] = patty05[k];
+                k++;
+            }
+            k = 0;
+        }
+        else if (whichPatt == 6){
+            for (var i = 0; i < patty06.length; i++){
+                krabby01[k] = patty06[k];
+                k++;
+            }
+            k = 0;
+        }
+        else if (whichPatt == 7){
+            for (var i = 0; i < patty07.length; i++){
+                krabby01[k] = patty07[k];
+                k++;
+            }
+            k = 0;
+        }
+    }
+    applyPatt();
+    var direction = 1;
+    var drawCount = 0;
+    var pp = Math.ceil(Math.ceil(Math.random() * krabby01.length) + 0);
+    ctx.beginPath();
+    if (sliderF_set == 1){ //line scribble
+        ctx.moveTo(px_x[pxM[drawCount]],px_y[pxM[drawCount]]-2);
+        while (drawCount < sliderCount_set){
+            if (rando[pxM[1]] < 50){
+                direction *= -1;
+            }
+            pxx_c = px_x[drawCount*2];        pxy_c = px_y[Math.round(drawCount*1.5)];
+            ctx.lineTo(pxx_c,pxy_c);
+            for (var i = 0; i < sliderCount_set; i++){
+                if (rando[drawCount] < 50){
+                    krabby01[pp] *= -1;
+                }
+                console.log("krabpp:" + krabby01[pp] + " pxx:" + pxx_c + " pxy:" + pxy_c);
+                if (krabby01[pp]%6 == 0 && krabby01[pp] > 10){
+                    pxx_c += (krabby01[pp]*(pxSize-1));
+                }
+                if (krabby01[pp]%3 == 0 && rando[drawCount] > 40){
+                    pxy_c -= (krabby01[pp]*pxSize)*direction;
+                }
+                if ((krabby01[pp]*2)%5 == 0){
+                    pxx_c -= krabby01[pp]*(pxSize-1);
+                    if (rando[drawCount] > 30){
+                        pxy_c += krabby01[pp-1]*(pxSize*2)*direction;
+                    }
+                }
+                if (krabby01[pp] > (pxSize*3) && rando[drawCount+2] < (Math.round(pxSize*2)-1)){
+                    console.log("jfjfjfjf");
+                    var divAmt = (12-pxSize);
+                    var pxAmt = Math.floor(c.height/72);
+                    if (pxx_c > c.width){
+                        pxx_c -= Math.round((c.width/divAmt));
+                        if (rando[69] > 80){
+                            pxy_c -= pxAmt;
+                        }
+                    }
+                    if (pxy_c > c.height){
+                        pxy_c -= Math.round((c.height/divAmt));
+                        if (rando[69] > 80){
+                            pxy_c += pxAmt;
+                        }
+                    }
+                    if (pxx_c < c.width){
+                        pxx_c += Math.round((c.width/divAmt));
+                        if (rando[69] > 80){
+                            pxx_c -= pxAmt;
+                        }
+                    }
+                    if (pxy_c < c.height){
+                        pxy_c += Math.round((c.height/divAmt));
+                        if (rando[69] > 80){
+                            pxx_c += pxAmt;
+                        }
+                    }
+                }
+                if (rando[(drawCount*2)] > 86 && (krabby01[pp]*21)%4 == 0){
+                    pxx_c -= krabby01[pp]^pxSize;
+                    pxy_c -= krabby01[pp]^pxSize;
+                    console.log("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+                }
+                pxx_c += krabby01[pp];
+                if (drawCount %36 == 0){
+                    krabby01[pp] *= pxSize;
+                    krabby01[pp] *= -1;
+                }
+                pxy_c += krabby01[(pp-1)];
+                ctx.lineTo(pxx_c,pxy_c);
+                drawCount++;
+                pp++;                
+                if (pp == krabby01.length){
+                    console.log("mm");
+                    pp = 0;
+                }
+            }
+            pxM[drawCount]++;
+        }
+        ctx.stroke();
+        applyPatt();
+    }
+    else if (sliderF_set == 2){ //arc scribb
+        pxx_c = px_x[6];
+        pxy_c = px_y[6];
+        if (pxy_c < (c.height/70)){
+            pxy_c += (c.height/(pxSize*8));
+        }
+        var radVariation = Math.round(pxSize*(c.height/66))+variation_a[1];
+        while (drawCount < sliderCount_set){
+            if (radVariation < 0){
+                radVariation *= -1;
+            }
+            var arcCock = Math.round(rando[drawCount]/13)^pxSize;
+            var arcDick = Math.round(rando[drawCount+2]/15)^pxSize;
+            console.log(pxx_c + "," + pxy_c);
+            ctx.arc(pxx_c,pxy_c,radVariation,arcCock,arcDick); //x,y,radius?,trim path type end cut offs?
+            ctx.stroke();
+            if ((krabby01[pp]*4) < 20 && rando[drawCount+5] < 50){
+                arcCock -= Math.round(pxSize/krabby02[pp]);
+                arcDick -= Math.round(pxSize/krabby01[pp+2]);
+            }
+            if (rando[drawCount] > 50){
+                krabby01[pp] *= -1;
+            }
+            pxx_c += krabby01[pp];
+            if (rando[drawCount] > 50){
+                krabby01[pp] *= -1;
+            }
+            if ((Math.ceil(krabby01[pp]*7.5)) > 36){
+                pxy_c -= krabby01[pp];
+                radVariation -= (krabby01[pp]/3);
+            }
+            pxy_c += krabby01[pp];
+            drawCount++;
+        }
+    }
+    drawCount = 0;
+    console.log("cum");
+}
+
+//console.log(px_x[3] + "/" + px_y[3]);
+function clearCanv(){
+    ctx.clearRect(-10, -10, c.width+100, c.height+100);
+} 
+function test(){
+    //console.log(c.width + " | " + c.height);
+    resetRandos();
+    ctx.fillStyle = "rgba(210,210,210,1)";
+    console.log(px_x[1] + "," + px_y[1])
+    ctx.fillRect(px_x[1],px_y[1],pxSize,pxSize);
+    console.log("pt1 " + pattytt.length + "- krab " + krabby01.length);
+    ctx.beginPath();
+    ctx.arc(px_x[1],px_y[1],100,2,5);
+    ctx.stroke();
+}
+</script>
+</html>
